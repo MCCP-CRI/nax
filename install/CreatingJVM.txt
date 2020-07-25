@@ -1,0 +1,7 @@
+1. Install AdoptOpenJDK LTS version
+
+2. Run jdeps on the Fat JAR to get the list of Java modules:
+jdeps --print-module-deps naaccrxml-commandline.jar
+
+3. Run jlink with the list of modules from above to generate a platform-specific jvm directory:
+jlink --add-modules java.base,java.compiler,java.desktop,java.management.rmi,java.prefs,java.scripting,java.sql --output windows

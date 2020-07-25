@@ -1,0 +1,3 @@
+The data in this folder is completely fabricated, did not derive from actual patient data, and is for testing and demonstration purposes only.
+
+Do not attempt to contribute data to this project that is derived from or can be traced back to actual people, living or dead.

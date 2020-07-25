@@ -1,0 +1,933 @@
+<?xml version='1.0'?>
+<NaaccrData baseDictionaryUri="http://naaccr.org/naaccrxml/naaccr-dictionary-180.xml" recordType="A" timeGenerated="2019-04-12T11:27:32.2581545-04:00" specificationVersion="1.4" xmlns="http://naaccr.org/naaccrxml" xmlns:test="https://www.naaccr.org/xmltest">
+    <Item naaccrId="registryId">0000000001</Item>
+    <Item naaccrId="recordType">I</Item>
+    <test:NAACCR_FILE>
+        <test:AUTHOR email="gabetestnax@server.us">
+            <test:FULL_NAME>Gabriel Testnax</test:FULL_NAME>
+        </test:AUTHOR>
+        <test:DESCRIPTION><![CDATA[NAACCR XML File for test purposes.
+            Contains an extra namespace outside of the default naaccrxml namespace
+        ]]></test:DESCRIPTION>
+    </test:NAACCR_FILE>
+    <test:DELETION_LIST>
+        <test:INTERNAL_ID>12345</test:INTERNAL_ID>
+        <test:INTERNAL_ID>45678</test:INTERNAL_ID>
+    </test:DELETION_LIST>
+    <Patient>
+        <Item naaccrId="nameMiddle">Keanu</Item>
+        <Item naaccrId="patientIdNumber">00000001</Item>
+        <Item naaccrId="birthplaceCountry">USA</Item>
+        <Item naaccrId="vitalStatus">1</Item>
+        <Item naaccrId="causeOfDeath">0000</Item>
+        <Item naaccrId="icdRevisionNumber">0</Item>
+        <Item naaccrId="nameFirst">Violeta</Item>
+        <Item naaccrId="raceNapiia">01</Item>
+        <Item naaccrId="socialSecurityNumber">000990001</Item>
+        <Item naaccrId="spanishHispanicOrigin">0</Item>
+        <Item naaccrId="nhiaDerivedHispOrigin">0</Item>
+        <Item naaccrId="sex">1</Item>
+        <Item naaccrId="dateOfBirth">19761215</Item>
+        <Item naaccrId="race5">88</Item>
+        <Item naaccrId="nameLast">Cummerata</Item>
+        <Item naaccrId="race1">01</Item>
+        <Item naaccrId="race2">88</Item>
+        <Item naaccrId="race3">88</Item>
+        <Item naaccrId="race4">88</Item>
+        <Item naaccrId="dateOfLastContact">20171015</Item>
+        <Item naaccrId="birthplaceState">LA</Item>
+        <test:PATIENT>
+            <test:CONTACT enabled="false"/>
+            <test:EMAIL>00000010@server.us</test:EMAIL>
+        </test:PATIENT>
+        <Tumor>
+            <Item naaccrId="reserved09">SOME TEXT LESS THAN 50 CHARACTERS</Item>
+            <Item naaccrId="seerRecordNumber">01</Item>
+            <Item naaccrId="rxSummSurgicalMargins">9</Item>
+            <Item naaccrId="rxSummSurgRadSeq">9</Item>
+            <Item naaccrId="multiplicityCounter">99</Item>
+            <Item naaccrId="rxSummBrm">99</Item>
+            <Item naaccrId="sequenceNumberCentral">00</Item>
+            <Item naaccrId="dateOfDiagnosis">20171015</Item>
+            <Item naaccrId="rxSummRadiation">9</Item>
+            <Item naaccrId="primarySite">C809</Item>
+            <Item naaccrId="multTumRptAsOnePrim">99</Item>
+            <Item naaccrId="dateInitialRxSeer">20171015</Item>
+            <Item naaccrId="censusTrPovertyIndictr">9</Item>
+            <Item naaccrId="censusTrCertainty2000">9</Item>
+            <Item naaccrId="tumorRecordNumber">01</Item>
+            <Item naaccrId="grade">9</Item>
+            <Item naaccrId="censusTrCertainty2010">9</Item>
+            <Item naaccrId="rxSummPalliativeProc">9</Item>
+            <Item naaccrId="rxSummSurgPrimSite">99</Item>
+            <Item naaccrId="rxSummTransplntEndocr">99</Item>
+            <Item naaccrId="rxSummSurgOthRegDis">9</Item>
+            <Item naaccrId="rxSummDxStgProc">09</Item>
+            <Item naaccrId="rxSummTreatmentStatus">9</Item>
+            <Item naaccrId="dateConclusiveDx">20171015</Item>
+            <Item naaccrId="histologicTypeIcdO3">8140</Item>
+            <Item naaccrId="dateOfMultTumors">20171015</Item>
+            <Item naaccrId="rxSummScopeRegLnSur">9</Item>
+            <Item naaccrId="seerCodingSysCurrent">F</Item>
+            <Item naaccrId="maritalStatusAtDx">2</Item>
+            <Item naaccrId="laterality">0</Item>
+            <Item naaccrId="primaryPayerAtDx">99</Item>
+            <Item naaccrId="diagnosticConfirmation">1</Item>
+            <Item naaccrId="censusTract2000">999999</Item>
+            <Item naaccrId="rxSummHormone">99</Item>
+            <Item naaccrId="typeOfReportingSource">1</Item>
+            <Item naaccrId="seerTypeOfFollowUp">2</Item>
+            <Item naaccrId="ageAtDiagnosis">040</Item>
+            <Item naaccrId="rxSummRadToCns">9</Item>
+            <Item naaccrId="behaviorCodeIcdO3">3</Item>
+            <Item naaccrId="censusTract2010">999999</Item>
+            <Item naaccrId="reasonForNoSurgery">8</Item>
+            <Item naaccrId="rxSummSystemicSurSeq">9</Item>
+            <Item naaccrId="rxSummChemo">99</Item>
+            <Item naaccrId="rxSummOther">9</Item>
+            <test:TUMOR>
+                <test:PATH_REPORT id="pathreport1"><![CDATA[
+                    MSH|^~\&||INDEPENDENT LAB SERVICES^pathreport1^CLIA|||200506021339||ORU^R01^ORU_R01|2004072813390045|P|2.5.1|||||||||VOL_V_30_ORU_R01^NAACCR_CP^2.16.840.1.113883.9.8^ISO
+                    PID|1||123456789^^^^SS~00466144^^^^MR||McMuffin^Candy||19570706|F||2106-3^White^HL70005|495 East Overshoot Drive^^Delmar^NY^12054^^H|||||M
+                    ORC|RE||||||||||||||||||||Albany Medical Center|43 New Scotland Ave.^^Albany^NY^12208||43 New Scotland Ave.^^Albany^NY^12208
+                    OBR|1||06-123456-MH|22049-1^Flow Cytometry Analysis^LN|||200505021212|||||||200505311130|^Bone marrow|^B.J.^Healing^^^^M.D.|2033271605|||||200505311332|||F|||||||109772&PATHOLOGIST&QUINCY&&&Dr.&MD&&NPI
+                    OBX|1|TX|22633-2^nature of specimen^LN||Bone marrow.|||N|||F|||200505021212
+                    OBX|2|TX|22636-5^clinical history^LN||Evaluate for non-Hodgkin's lymphoma: ALL: myelodysplastic syndromes: chronic Lymphoproliferative disorders, CLL. Prior therapy: chemotherapy, Fludarabine more than one month ago. CBC report received.|||N|||F|||200505021212
+                    OBX|3|TX|22638-1^comments^LN||Correlation with a comprehensive bone marrow morphology examination, CBC data/blood smear, and other relevant clincial and laboratory data is recommended.|||N|||F|||200505021212
+                    OBX|4|TX|22637-3^final diagnosis^LN||A small population of monoclonal B-cells (Kappa) is present in the bone marrow. The antigenic profile is consistent with chronic lymphocytic leukemia/small lymphocytic lymphoma (CLL/SLL).|||N|||F|||200505021212
+                    OBX|5|TX|22049-1^phenotype^LN||1. A monoclonal kappa B-cell population co-expressing CD5 and CD23 is present. 2. -92% maturing myeloid elements are present.|||N|||F|||200505021212
+                ]]></test:PATH_REPORT>
+                <test:PATH_REPORT id="pathreport2"><![CDATA[
+                    MSH|^~\&||INDEPENDENT LAB SERVICES^pathreport2^CLIA|||200407281339||ORU^R01^ORU_R01|2004072813390045|P|2.5.1|||||||||VOL_V_3 0_ORU_R01^NAACCR_CP^2.16.840.1.113883.9.8^ISO
+                    PID|1||123456789^^^^SS~00466144^^^^MR||McMuffin^Candy||19570706|F||2106-3^White^HL70005|495 East Overshoot Drive^^Delmar^NY^12054^^H|||||M
+                    ORC|RE||||||||||||||||||||Albany Medical Center|43 New Scotland Ave.^^Albany^NY^12208||43 New Scotland Ave.^^Albany^NY^12208
+                    OBR|1||97 810430|11529-5^Surgical Pathology Study Report^LN|||200707251630|||123456^MYELOMUS^JOHN|||||TISS^Tissue^HL70070|594110NY^CARING^CAREN^^M. D.^^^^NY_PHYSICIANLICENSE^^^^MD|||||||||F|||||||109771&GLANCE&JUSTIN&&&&&&NY_PHYSICIANLICENSE
+                    OBX|1|TX|22637-3^Path report.final diagnosis^LN||Carcinoma of breast. Post operative diagnosis: same.||||||F
+                    OBX|2|TX|22636-5^Path report.relevant Hx^LN||47-year old white female with (L) UOQ breast mass||||||F
+                    OBX|3|TX|22633-2^Path report.site of origin^LN|1|left breast biopsy||||||F
+                    OBX|4|TX|22633-2^Path report.site of origin^LN|2|apical axillary tissue||||||F
+                    OBX|5|TX|22633-2^Path report.site of origin^LN|3|contents of left radical mastectomy||||||F
+                    OBX|6|TX|22634-0^Path report.gross description^LN|1|Part #1 is labeled "left breast biopsy" and is received fresh after frozen section preparation. It consists of a single firm nodule measuring 3cm in circular diameter and 1.5cm in thickness surrounded by adherent firbrofatty tissue. On section a pale gray, slightly mottled appearance is revealed. Numerous sections are submitted for permanent processing.||||||F
+                    OBX|7|TX|22634-0^Path report.gross description^LN|2|Part #2 is labeled "apical left axillary tissue" and is received fresh. It consists of two amorphous fibrofatty tissue masses without grossly discernible lymph nodes therein. Both pieces are rendered into numerous sections and submitted in their entirety for history.||||||F
+                    OBX|8|TX|22634-0^Path report.gross description^LN|3|Part #3 is labeled "contents of left radical mastectomy" and is received flesh. It consists of a large ellipse of skin overlying breast tissue, the ellipse measuring 20cm in length and 14 cm in height. A freshly sutured incision extends 3cm directly lateral from the areola, corresponding to the closure for removal of part #1. Abundant amounts of fibrofatty connective tissue surround the entire beast and the deep aspect includes and 8cm length of pectoralis minor and a generous mass of overlying pectoralis major muscle. Incision from the deepest aspect of the specimen beneath the tumor mass reveals tumor extension gross to within 0.5cm of muscle. Sections are submitted according to the following code: DE- deep surgical resection margins; SU, LA, INF, ME -- full thickness radila samplings from the center of the tumor superiorly, laterally, inferiorly and medially, respectively: NI- nipple and subjacent tissue. Lymph nodes dissected free from axillary fibrofatty tissue from levels I, II, and III will be labeled accordingly.||||||F
+                    OBX|9|TX|22635-7^Path report.microscopic observation^LN||Sections of part #1 confirm frozen section diagnosis of infiltrating duct carcinoma. It is to be noted that the tumor cells show considerable pleomorphism, and mitotic figures are frequent (as many as 4 per high power field). Many foci of calcification are present within the tumor. Part #2 consists of fibrofatty tissue and single tiny lymph node free of disease. Part #3 includes 18 lymph nodes, three from Level III, two from Level II and thirteen from Level I. All lymph nodes are free of disease with the exception of one Level I lymph node, which contains several masses of metastatic carcinoma. All sections taken radially from the superficial center of the resection site fail to include tumor, indicating the tumor to have originated deep within the breast parenchyma. Similarly, there is no malignancy in the nipple region, or in the lactiferous sinuses. Sections of deep surgical margin demonstrate diffuse tumor infiltration of deep fatty tissues, however, there is no invasion of muscle. Total size of primary tumor is estimated to be 4cm in greatest dimension.||||||F
+                    OBX|10|TX|22637-3^Path report.final diagnosis^LN|1|1. Infiltrating duct carcinoma, left breast.||||||F
+                    OBX|11|TX|22637-3^Path report.final diagnosis^LN|2|2. Lymph node, no pathologic diagnosis, left axilla.||||||F
+                    OBX|12|TX|22637-3^Path report.final diagnosis^LN|3|3. Ext. of tumor into deep fatty tissue. Metastatic carcinoma, left axillary lymph node (1) Level I. Free of disease 17 of 18 lymph nodes - Level I (12), Level II (2) and Level III (3).||||||F
+                ]]></test:PATH_REPORT>
+            </test:TUMOR>
+        </Tumor>
+    </Patient>
+    <Patient>
+         <Item naaccrId="birthplaceCountry">USA</Item>
+        <Item naaccrId="vitalStatus">1</Item>
+        <Item naaccrId="raceNapiia">01</Item>
+        <Item naaccrId="spanishHispanicOrigin">0</Item>
+        <Item naaccrId="nhiaDerivedHispOrigin">0</Item>
+        <Item naaccrId="sex">2</Item>
+        <Item naaccrId="nameLast">Schamberger</Item>
+        <Item naaccrId="dateOfLastContact">20151115</Item>
+        <Item naaccrId="nameMiddle">Gianna</Item>
+        <Item naaccrId="patientIdNumber">00000002</Item>
+        <Item naaccrId="causeOfDeath">0000</Item>
+        <Item naaccrId="icdRevisionNumber">0</Item>
+        <Item naaccrId="nameFirst">Jamey</Item>
+        <Item naaccrId="socialSecurityNumber">000990002</Item>
+        <Item naaccrId="dateOfBirth">19441215</Item>
+        <Item naaccrId="race5">88</Item>
+        <Item naaccrId="race1">01</Item>
+        <Item naaccrId="race2">88</Item>
+        <Item naaccrId="race3">88</Item>
+        <Item naaccrId="race4">88</Item>
+        <Item naaccrId="birthplaceState">DE</Item>
+        <test:PATIENT>
+            <test:CONTACT enabled="true"/>
+            <test:EMAIL>00000002@server.us</test:EMAIL>
+        </test:PATIENT>
+        <Tumor>
+            <Item naaccrId="csSiteSpecificFactor5">988</Item>
+            <Item naaccrId="derivedAjcc7M">120</Item>
+            <Item naaccrId="derivedSs2000">7</Item>
+            <Item naaccrId="seerRecordNumber">01</Item>
+            <Item naaccrId="csSiteSpecificFactor4">988</Item>
+            <Item naaccrId="derivedAjcc7N">100</Item>
+            <Item naaccrId="csSiteSpecificFactor7">988</Item>
+            <Item naaccrId="derivedAjccFlag">1</Item>
+            <Item naaccrId="csSiteSpecificFactor6">988</Item>
+            <Item naaccrId="rxSummSurgRadSeq">9</Item>
+            <Item naaccrId="csSiteSpecificFactor1">020</Item>
+            <Item naaccrId="csSiteSpecificFactor3">988</Item>
+            <Item naaccrId="csSiteSpecificFactor2">030</Item>
+            <Item naaccrId="csMetsAtDxLung">9</Item>
+            <Item naaccrId="multiplicityCounter">99</Item>
+            <Item naaccrId="derivedAjcc6T">40</Item>
+            <Item naaccrId="derivedAjcc6StageGrp">70</Item>
+            <Item naaccrId="lymphVascularInvasion">1</Item>
+            <Item naaccrId="primarySite">C341</Item>
+            <Item naaccrId="multTumRptAsOnePrim">99</Item>
+            <Item naaccrId="derivedAjcc6M">10</Item>
+            <Item naaccrId="derivedAjcc6N">10</Item>
+            <Item naaccrId="regionalNodesPositive">97</Item>
+            <Item naaccrId="censusTrPovertyIndictr">9</Item>
+            <Item naaccrId="censusTrCertainty2000">9</Item>
+            <Item naaccrId="tumorRecordNumber">01</Item>
+            <Item naaccrId="grade">9</Item>
+            <Item naaccrId="censusTrCertainty2010">9</Item>
+            <Item naaccrId="rxSummPalliativeProc">9</Item>
+            <Item naaccrId="csSiteSpecificFactor9">988</Item>
+            <Item naaccrId="csSiteSpecificFactor8">988</Item>
+            <Item naaccrId="csVersionDerived">020550</Item>
+            <Item naaccrId="rxSummDxStgProc">09</Item>
+            <Item naaccrId="csSiteSpecificFactor19">988</Item>
+            <Item naaccrId="dateOfMultTumors">20151115</Item>
+            <Item naaccrId="seerCodingSysCurrent">F</Item>
+            <Item naaccrId="maritalStatusAtDx">4</Item>
+            <Item naaccrId="laterality">9</Item>
+            <Item naaccrId="primaryPayerAtDx">99</Item>
+            <Item naaccrId="csSiteSpecificFactor20">988</Item>
+            <Item naaccrId="csSiteSpecificFactor21">988</Item>
+            <Item naaccrId="censusTract2000">999999</Item>
+            <Item naaccrId="csSiteSpecificFactor22">988</Item>
+            <Item naaccrId="csSiteSpecificFactor23">988</Item>
+            <Item naaccrId="csSiteSpecificFactor24">988</Item>
+            <Item naaccrId="csSiteSpecificFactor25">988</Item>
+            <Item naaccrId="rxSummHormone">99</Item>
+            <Item naaccrId="derivedSs2000Flag">1</Item>
+            <Item naaccrId="csLymphNodesEval">6</Item>
+            <Item naaccrId="seerTypeOfFollowUp">2</Item>
+            <Item naaccrId="ageAtDiagnosis">070</Item>
+            <Item naaccrId="rxSummRadToCns">9</Item>
+            <Item naaccrId="derivedAjcc6MDescript">p</Item>
+            <Item naaccrId="censusTract2010">999999</Item>
+            <Item naaccrId="csMetsAtDx">41</Item>
+            <Item naaccrId="csTumorSizeExtEval">1</Item>
+            <Item naaccrId="reasonForNoSurgery">8</Item>
+            <Item naaccrId="csMetsAtDxLiver">9</Item>
+            <Item naaccrId="rxSummChemo">99</Item>
+            <Item naaccrId="derivedSs1977">7</Item>
+            <Item naaccrId="derivedAjcc7TDescript">c</Item>
+            <Item naaccrId="rxSummSurgicalMargins">9</Item>
+            <Item naaccrId="csLymphNodes">500</Item>
+            <Item naaccrId="rxSummBrm">99</Item>
+            <Item naaccrId="csVersionInputOriginal">020550</Item>
+            <Item naaccrId="sequenceNumberCentral">00</Item>
+            <Item naaccrId="dateOfDiagnosis">20151115</Item>
+            <Item naaccrId="rxSummRadiation">9</Item>
+            <Item naaccrId="derivedAjcc7MDescript">p</Item>
+            <Item naaccrId="dateInitialRxSeer">20151115</Item>
+            <Item naaccrId="regionalNodesExamined">90</Item>
+            <Item naaccrId="derivedSs1977Flag">1</Item>
+            <Item naaccrId="derivedAjcc6NDescript">y</Item>
+            <Item naaccrId="csTumorSize">999</Item>
+            <Item naaccrId="csSiteSpecificFactor10">988</Item>
+            <Item naaccrId="csSiteSpecificFactor15">988</Item>
+            <Item naaccrId="rxSummSurgPrimSite">99</Item>
+            <Item naaccrId="rxSummTransplntEndocr">99</Item>
+            <Item naaccrId="csSiteSpecificFactor16">988</Item>
+            <Item naaccrId="rxSummSurgOthRegDis">9</Item>
+            <Item naaccrId="csSiteSpecificFactor17">988</Item>
+            <Item naaccrId="derivedAjcc7NDescript">y</Item>
+            <Item naaccrId="csSiteSpecificFactor18">988</Item>
+            <Item naaccrId="csSiteSpecificFactor11">988</Item>
+            <Item naaccrId="csSiteSpecificFactor12">988</Item>
+            <Item naaccrId="csSiteSpecificFactor13">988</Item>
+            <Item naaccrId="csSiteSpecificFactor14">988</Item>
+            <Item naaccrId="csVersionInputCurrent">020550</Item>
+            <Item naaccrId="csMetsAtDxBone">9</Item>
+            <Item naaccrId="rxSummTreatmentStatus">9</Item>
+            <Item naaccrId="dateConclusiveDx">20151115</Item>
+            <Item naaccrId="histologicTypeIcdO3">8140</Item>
+            <Item naaccrId="rxSummScopeRegLnSur">9</Item>
+            <Item naaccrId="diagnosticConfirmation">1</Item>
+            <Item naaccrId="derivedAjcc6TDescript">p</Item>
+            <Item naaccrId="derivedAjcc7StageGrp">700</Item>
+            <Item naaccrId="typeOfReportingSource">1</Item>
+            <Item naaccrId="behaviorCodeIcdO3">3</Item>
+            <Item naaccrId="csMetsAtDxBrain">9</Item>
+            <Item naaccrId="csExtension">748</Item>
+            <Item naaccrId="rxSummSystemicSurSeq">9</Item>
+            <Item naaccrId="rxSummOther">9</Item>
+            <Item naaccrId="csMetsEval">2</Item>
+            <Item naaccrId="derivedAjcc7T">400</Item>
+        </Tumor>
+    </Patient>
+    <Patient>
+        <Item naaccrId="nameMiddle">Alexus</Item>
+        <Item naaccrId="patientIdNumber">00000003</Item>
+        <Item naaccrId="birthplaceCountry">USA</Item>
+        <Item naaccrId="vitalStatus">1</Item>
+        <Item naaccrId="causeOfDeath">0000</Item>
+        <Item naaccrId="icdRevisionNumber">0</Item>
+        <Item naaccrId="nameFirst">Ronnie</Item>
+        <Item naaccrId="raceNapiia">01</Item>
+        <Item naaccrId="socialSecurityNumber">000990003</Item>
+        <Item naaccrId="spanishHispanicOrigin">0</Item>
+        <Item naaccrId="nhiaDerivedHispOrigin">0</Item>
+        <Item naaccrId="sex">2</Item>
+        <Item naaccrId="dateOfBirth">19560115</Item>
+        <Item naaccrId="race5">88</Item>
+        <Item naaccrId="nameLast">Renner</Item>
+        <Item naaccrId="race1">01</Item>
+        <Item naaccrId="race2">88</Item>
+        <Item naaccrId="race3">88</Item>
+        <Item naaccrId="race4">88</Item>
+        <Item naaccrId="dateOfLastContact">20170115</Item>
+        <Item naaccrId="birthplaceState">WY</Item>
+        <test:PATIENT>
+            <test:CONTACT enabled="false"/>
+            <test:EMAIL>00000003@server.us</test:EMAIL>
+        </test:PATIENT>
+        <Tumor>
+            <Item naaccrId="seerRecordNumber">01</Item>
+            <Item naaccrId="rxSummSurgicalMargins">9</Item>
+            <Item naaccrId="rxSummSurgRadSeq">9</Item>
+            <Item naaccrId="multiplicityCounter">99</Item>
+            <Item naaccrId="rxSummBrm">99</Item>
+            <Item naaccrId="sequenceNumberCentral">00</Item>
+            <Item naaccrId="dateOfDiagnosis">20170115</Item>
+            <Item naaccrId="rxSummRadiation">9</Item>
+            <Item naaccrId="primarySite">C189</Item>
+            <Item naaccrId="multTumRptAsOnePrim">99</Item>
+            <Item naaccrId="dateInitialRxSeer">20170115</Item>
+            <Item naaccrId="censusTrPovertyIndictr">9</Item>
+            <Item naaccrId="censusTrCertainty2000">9</Item>
+            <Item naaccrId="tumorRecordNumber">01</Item>
+            <Item naaccrId="grade">9</Item>
+            <Item naaccrId="censusTrCertainty2010">9</Item>
+            <Item naaccrId="rxSummPalliativeProc">9</Item>
+            <Item naaccrId="rxSummSurgPrimSite">99</Item>
+            <Item naaccrId="rxSummTransplntEndocr">99</Item>
+            <Item naaccrId="rxSummSurgOthRegDis">9</Item>
+            <Item naaccrId="rxSummDxStgProc">09</Item>
+            <Item naaccrId="rxSummTreatmentStatus">9</Item>
+            <Item naaccrId="dateConclusiveDx">20170115</Item>
+            <Item naaccrId="histologicTypeIcdO3">8140</Item>
+            <Item naaccrId="dateOfMultTumors">20170115</Item>
+            <Item naaccrId="rxSummScopeRegLnSur">9</Item>
+            <Item naaccrId="seerCodingSysCurrent">F</Item>
+            <Item naaccrId="maritalStatusAtDx">2</Item>
+            <Item naaccrId="laterality">9</Item>
+            <Item naaccrId="primaryPayerAtDx">99</Item>
+            <Item naaccrId="diagnosticConfirmation">1</Item>
+            <Item naaccrId="censusTract2000">999999</Item>
+            <Item naaccrId="rxSummHormone">99</Item>
+            <Item naaccrId="typeOfReportingSource">1</Item>
+            <Item naaccrId="seerTypeOfFollowUp">2</Item>
+            <Item naaccrId="ageAtDiagnosis">060</Item>
+            <Item naaccrId="rxSummRadToCns">9</Item>
+            <Item naaccrId="behaviorCodeIcdO3">3</Item>
+            <Item naaccrId="censusTract2010">999999</Item>
+            <Item naaccrId="reasonForNoSurgery">8</Item>
+            <Item naaccrId="rxSummSystemicSurSeq">9</Item>
+            <Item naaccrId="rxSummChemo">99</Item>
+            <Item naaccrId="rxSummOther">9</Item>
+        </Tumor>
+    </Patient>
+    <Patient>
+       <Item naaccrId="nameMiddle">April</Item>
+        <Item naaccrId="patientIdNumber">00000004</Item>
+        <Item naaccrId="birthplaceCountry">USA</Item>
+        <Item naaccrId="vitalStatus">1</Item>
+        <Item naaccrId="causeOfDeath">0000</Item>
+        <Item naaccrId="icdRevisionNumber">0</Item>
+        <Item naaccrId="nameFirst">Chasity</Item>
+        <Item naaccrId="raceNapiia">01</Item>
+        <Item naaccrId="socialSecurityNumber">000990004</Item>
+        <Item naaccrId="spanishHispanicOrigin">0</Item>
+        <Item naaccrId="nhiaDerivedHispOrigin">0</Item>
+        <Item naaccrId="sex">2</Item>
+        <Item naaccrId="dateOfBirth">19451015</Item>
+        <Item naaccrId="race5">88</Item>
+        <Item naaccrId="nameLast">Watsica</Item>
+        <Item naaccrId="race1">01</Item>
+        <Item naaccrId="race2">88</Item>
+        <Item naaccrId="race3">88</Item>
+        <Item naaccrId="race4">88</Item>
+        <Item naaccrId="dateOfLastContact">20170515</Item>
+        <Item naaccrId="birthplaceState">KY</Item>
+        <test:PATIENT>
+            <test:CONTACT enabled="true"/>
+            <test:EMAIL>00000004@server.us</test:EMAIL>
+        </test:PATIENT>
+        <Tumor>
+            <Item naaccrId="seerRecordNumber">01</Item>
+            <Item naaccrId="rxSummSurgicalMargins">9</Item>
+            <Item naaccrId="rxSummSurgRadSeq">9</Item>
+            <Item naaccrId="multiplicityCounter">99</Item>
+            <Item naaccrId="rxSummBrm">99</Item>
+            <Item naaccrId="sequenceNumberCentral">00</Item>
+            <Item naaccrId="dateOfDiagnosis">20170515</Item>
+            <Item naaccrId="rxSummRadiation">9</Item>
+            <Item naaccrId="primarySite">C341</Item>
+            <Item naaccrId="multTumRptAsOnePrim">99</Item>
+            <Item naaccrId="dateInitialRxSeer">20170515</Item>
+            <Item naaccrId="censusTrPovertyIndictr">9</Item>
+            <Item naaccrId="censusTrCertainty2000">9</Item>
+            <Item naaccrId="tumorRecordNumber">01</Item>
+            <Item naaccrId="grade">9</Item>
+            <Item naaccrId="censusTrCertainty2010">9</Item>
+            <Item naaccrId="rxSummPalliativeProc">9</Item>
+            <Item naaccrId="rxSummSurgPrimSite">99</Item>
+            <Item naaccrId="rxSummTransplntEndocr">99</Item>
+            <Item naaccrId="rxSummSurgOthRegDis">9</Item>
+            <Item naaccrId="rxSummDxStgProc">09</Item>
+            <Item naaccrId="rxSummTreatmentStatus">9</Item>
+            <Item naaccrId="dateConclusiveDx">20170515</Item>
+            <Item naaccrId="histologicTypeIcdO3">8046</Item>
+            <Item naaccrId="dateOfMultTumors">20170515</Item>
+            <Item naaccrId="rxSummScopeRegLnSur">9</Item>
+            <Item naaccrId="seerCodingSysCurrent">F</Item>
+            <Item naaccrId="maritalStatusAtDx">2</Item>
+            <Item naaccrId="laterality">9</Item>
+            <Item naaccrId="primaryPayerAtDx">99</Item>
+            <Item naaccrId="diagnosticConfirmation">1</Item>
+            <Item naaccrId="censusTract2000">999999</Item>
+            <Item naaccrId="rxSummHormone">99</Item>
+            <Item naaccrId="typeOfReportingSource">1</Item>
+            <Item naaccrId="seerTypeOfFollowUp">2</Item>
+            <Item naaccrId="ageAtDiagnosis">071</Item>
+            <Item naaccrId="rxSummRadToCns">9</Item>
+            <Item naaccrId="behaviorCodeIcdO3">3</Item>
+            <Item naaccrId="censusTract2010">999999</Item>
+            <Item naaccrId="reasonForNoSurgery">8</Item>
+            <Item naaccrId="rxSummSystemicSurSeq">9</Item>
+            <Item naaccrId="rxSummChemo">99</Item>
+            <Item naaccrId="rxSummOther">9</Item>
+        </Tumor>
+    </Patient>
+    <Patient>
+        <Item naaccrId="nameMiddle">Jadyn</Item>
+        <Item naaccrId="patientIdNumber">00000005</Item>
+        <Item naaccrId="birthplaceCountry">USA</Item>
+        <Item naaccrId="vitalStatus">1</Item>
+        <Item naaccrId="causeOfDeath">0000</Item>
+        <Item naaccrId="icdRevisionNumber">0</Item>
+        <Item naaccrId="nameFirst">Brain</Item>
+        <Item naaccrId="raceNapiia">01</Item>
+        <Item naaccrId="socialSecurityNumber">000990005</Item>
+        <Item naaccrId="spanishHispanicOrigin">0</Item>
+        <Item naaccrId="nhiaDerivedHispOrigin">0</Item>
+        <Item naaccrId="sex">2</Item>
+        <Item naaccrId="dateOfBirth">19960815</Item>
+        <Item naaccrId="race5">88</Item>
+        <Item naaccrId="nameLast">Zulauf</Item>
+        <Item naaccrId="race1">01</Item>
+        <Item naaccrId="race2">88</Item>
+        <Item naaccrId="race3">88</Item>
+        <Item naaccrId="race4">88</Item>
+        <Item naaccrId="dateOfLastContact">20160915</Item>
+        <Item naaccrId="birthplaceState">NY</Item>
+        <test:PATIENT>
+            <test:CONTACT enabled="false"/>
+            <test:EMAIL>00000005@server.us</test:EMAIL>
+        </test:PATIENT>
+        <Tumor>
+            <Item naaccrId="seerRecordNumber">01</Item>
+            <Item naaccrId="rxSummSurgicalMargins">9</Item>
+            <Item naaccrId="rxSummSurgRadSeq">9</Item>
+            <Item naaccrId="multiplicityCounter">99</Item>
+            <Item naaccrId="rxSummBrm">99</Item>
+            <Item naaccrId="sequenceNumberCentral">00</Item>
+            <Item naaccrId="dateOfDiagnosis">20160915</Item>
+            <Item naaccrId="rxSummRadiation">9</Item>
+            <Item naaccrId="primarySite">C414</Item>
+            <Item naaccrId="multTumRptAsOnePrim">99</Item>
+            <Item naaccrId="dateInitialRxSeer">20160915</Item>
+            <Item naaccrId="censusTrPovertyIndictr">9</Item>
+            <Item naaccrId="censusTrCertainty2000">9</Item>
+            <Item naaccrId="tumorRecordNumber">01</Item>
+            <Item naaccrId="grade">9</Item>
+            <Item naaccrId="censusTrCertainty2010">9</Item>
+            <Item naaccrId="rxSummPalliativeProc">9</Item>
+            <Item naaccrId="rxSummSurgPrimSite">99</Item>
+            <Item naaccrId="rxSummTransplntEndocr">99</Item>
+            <Item naaccrId="rxSummSurgOthRegDis">9</Item>
+            <Item naaccrId="rxSummDxStgProc">09</Item>
+            <Item naaccrId="rxSummTreatmentStatus">9</Item>
+            <Item naaccrId="dateConclusiveDx">20160915</Item>
+            <Item naaccrId="histologicTypeIcdO3">9180</Item>
+            <Item naaccrId="dateOfMultTumors">20160915</Item>
+            <Item naaccrId="rxSummScopeRegLnSur">9</Item>
+            <Item naaccrId="seerCodingSysCurrent">F</Item>
+            <Item naaccrId="maritalStatusAtDx">4</Item>
+            <Item naaccrId="laterality">9</Item>
+            <Item naaccrId="primaryPayerAtDx">99</Item>
+            <Item naaccrId="diagnosticConfirmation">1</Item>
+            <Item naaccrId="censusTract2000">999999</Item>
+            <Item naaccrId="rxSummHormone">99</Item>
+            <Item naaccrId="typeOfReportingSource">1</Item>
+            <Item naaccrId="seerTypeOfFollowUp">2</Item>
+            <Item naaccrId="ageAtDiagnosis">020</Item>
+            <Item naaccrId="rxSummRadToCns">9</Item>
+            <Item naaccrId="behaviorCodeIcdO3">3</Item>
+            <Item naaccrId="censusTract2010">999999</Item>
+            <Item naaccrId="reasonForNoSurgery">8</Item>
+            <Item naaccrId="rxSummSystemicSurSeq">9</Item>
+            <Item naaccrId="rxSummChemo">99</Item>
+            <Item naaccrId="rxSummOther">9</Item>
+        </Tumor>
+    </Patient>
+    <Patient>
+        <Item naaccrId="nameMaiden">Youmans</Item>
+        <Item naaccrId="birthplaceCountry">USA</Item>
+        <Item naaccrId="vitalStatus">1</Item>
+        <Item naaccrId="raceNapiia">02</Item>
+        <Item naaccrId="spanishHispanicOrigin">0</Item>
+        <Item naaccrId="nhiaDerivedHispOrigin">0</Item>
+        <Item naaccrId="sex">2</Item>
+        <Item naaccrId="nameLast">Sanford</Item>
+        <Item naaccrId="dateOfLastContact">20111115</Item>
+        <Item naaccrId="nameMiddle">Leah</Item>
+        <Item naaccrId="patientIdNumber">00000006</Item>
+        <Item naaccrId="computedEthnicity">1</Item>
+        <Item naaccrId="causeOfDeath">0000</Item>
+        <Item naaccrId="icdRevisionNumber">0</Item>
+        <Item naaccrId="nameFirst">Joan</Item>
+        <Item naaccrId="socialSecurityNumber">000990006</Item>
+        <Item naaccrId="dateOfBirth">19510415</Item>
+        <Item naaccrId="race5">88</Item>
+        <Item naaccrId="race1">02</Item>
+        <Item naaccrId="race2">88</Item>
+        <Item naaccrId="computedEthnicitySource">2</Item>
+        <Item naaccrId="race3">88</Item>
+        <Item naaccrId="race4">88</Item>
+        <Item naaccrId="birthplaceState">MD</Item>
+        <test:PATIENT>
+            <test:CONTACT enabled="true"/>
+            <test:EMAIL>00000006@server.us</test:EMAIL>
+        </test:PATIENT>
+        <Tumor>
+            <Item naaccrId="csSiteSpecificFactor5">988</Item>
+            <Item naaccrId="derivedAjcc7M">120</Item>
+            <Item naaccrId="derivedSs2000">7</Item>
+            <Item naaccrId="seerRecordNumber">01</Item>
+            <Item naaccrId="csSiteSpecificFactor4">988</Item>
+            <Item naaccrId="derivedAjcc7N">999</Item>
+            <Item naaccrId="csSiteSpecificFactor7">988</Item>
+            <Item naaccrId="derivedAjccFlag">1</Item>
+            <Item naaccrId="csSiteSpecificFactor6">988</Item>
+            <Item naaccrId="rxSummSurgRadSeq">9</Item>
+            <Item naaccrId="csSiteSpecificFactor1">010</Item>
+            <Item naaccrId="csSiteSpecificFactor3">988</Item>
+            <Item naaccrId="csSiteSpecificFactor2">999</Item>
+            <Item naaccrId="csMetsAtDxLung">9</Item>
+            <Item naaccrId="multiplicityCounter">99</Item>
+            <Item naaccrId="derivedAjcc6T">40</Item>
+            <Item naaccrId="derivedAjcc6StageGrp">70</Item>
+            <Item naaccrId="lymphVascularInvasion">9</Item>
+            <Item naaccrId="primarySite">C343</Item>
+            <Item naaccrId="multTumRptAsOnePrim">99</Item>
+            <Item naaccrId="derivedAjcc6M">10</Item>
+            <Item naaccrId="derivedAjcc6N">99</Item>
+            <Item naaccrId="regionalNodesPositive">98</Item>
+            <Item naaccrId="censusTrPovertyIndictr">9</Item>
+            <Item naaccrId="censusTrCertainty2000">9</Item>
+            <Item naaccrId="tumorRecordNumber">01</Item>
+            <Item naaccrId="grade">9</Item>
+            <Item naaccrId="censusTrCertainty2010">9</Item>
+            <Item naaccrId="rxSummPalliativeProc">9</Item>
+            <Item naaccrId="csSiteSpecificFactor9">988</Item>
+            <Item naaccrId="csSiteSpecificFactor8">988</Item>
+            <Item naaccrId="csVersionDerived">020550</Item>
+            <Item naaccrId="rxSummDxStgProc">09</Item>
+            <Item naaccrId="csSiteSpecificFactor19">988</Item>
+            <Item naaccrId="dateOfMultTumors">20111115</Item>
+            <Item naaccrId="seerCodingSysCurrent">B</Item>
+            <Item naaccrId="maritalStatusAtDx">5</Item>
+            <Item naaccrId="laterality">9</Item>
+            <Item naaccrId="primaryPayerAtDx">99</Item>
+            <Item naaccrId="csSiteSpecificFactor20">988</Item>
+            <Item naaccrId="csSiteSpecificFactor21">988</Item>
+            <Item naaccrId="censusTract2000">999999</Item>
+            <Item naaccrId="csSiteSpecificFactor22">988</Item>
+            <Item naaccrId="csSiteSpecificFactor23">988</Item>
+            <Item naaccrId="csSiteSpecificFactor24">988</Item>
+            <Item naaccrId="csSiteSpecificFactor25">988</Item>
+            <Item naaccrId="rxSummHormone">99</Item>
+            <Item naaccrId="derivedSs2000Flag">1</Item>
+            <Item naaccrId="csLymphNodesEval">2</Item>
+            <Item naaccrId="seerTypeOfFollowUp">2</Item>
+            <Item naaccrId="ageAtDiagnosis">060</Item>
+            <Item naaccrId="rxSummRadToCns">9</Item>
+            <Item naaccrId="derivedAjcc6MDescript">p</Item>
+            <Item naaccrId="censusTract2010">999999</Item>
+            <Item naaccrId="csMetsAtDx">42</Item>
+            <Item naaccrId="csTumorSizeExtEval">0</Item>
+            <Item naaccrId="reasonForNoSurgery">8</Item>
+            <Item naaccrId="csMetsAtDxLiver">9</Item>
+            <Item naaccrId="rxSummChemo">99</Item>
+            <Item naaccrId="derivedSs1977">7</Item>
+            <Item naaccrId="derivedAjcc7TDescript">c</Item>
+            <Item naaccrId="rxSummSurgicalMargins">9</Item>
+            <Item naaccrId="csLymphNodes">999</Item>
+            <Item naaccrId="rxSummBrm">99</Item>
+            <Item naaccrId="csVersionInputOriginal">020550</Item>
+            <Item naaccrId="sequenceNumberCentral">00</Item>
+            <Item naaccrId="dateOfDiagnosis">20111115</Item>
+            <Item naaccrId="rxSummRadiation">9</Item>
+            <Item naaccrId="derivedAjcc7MDescript">p</Item>
+            <Item naaccrId="dateInitialRxSeer">20111115</Item>
+            <Item naaccrId="regionalNodesExamined">99</Item>
+            <Item naaccrId="derivedSs1977Flag">1</Item>
+            <Item naaccrId="derivedAjcc6NDescript">p</Item>
+            <Item naaccrId="csTumorSize">990</Item>
+            <Item naaccrId="csSiteSpecificFactor10">988</Item>
+            <Item naaccrId="csSiteSpecificFactor15">988</Item>
+            <Item naaccrId="rxSummSurgPrimSite">99</Item>
+            <Item naaccrId="rxSummTransplntEndocr">99</Item>
+            <Item naaccrId="csSiteSpecificFactor16">988</Item>
+            <Item naaccrId="rxSummSurgOthRegDis">9</Item>
+            <Item naaccrId="csSiteSpecificFactor17">988</Item>
+            <Item naaccrId="derivedAjcc7NDescript">p</Item>
+            <Item naaccrId="csSiteSpecificFactor18">988</Item>
+            <Item naaccrId="csSiteSpecificFactor11">988</Item>
+            <Item naaccrId="csSiteSpecificFactor12">988</Item>
+            <Item naaccrId="csSiteSpecificFactor13">988</Item>
+            <Item naaccrId="csSiteSpecificFactor14">988</Item>
+            <Item naaccrId="csVersionInputCurrent">020550</Item>
+            <Item naaccrId="csMetsAtDxBone">9</Item>
+            <Item naaccrId="rxSummTreatmentStatus">9</Item>
+            <Item naaccrId="dateConclusiveDx">20111115</Item>
+            <Item naaccrId="histologicTypeIcdO3">8041</Item>
+            <Item naaccrId="rxSummScopeRegLnSur">9</Item>
+            <Item naaccrId="diagnosticConfirmation">1</Item>
+            <Item naaccrId="derivedAjcc6TDescript">c</Item>
+            <Item naaccrId="derivedAjcc7StageGrp">700</Item>
+            <Item naaccrId="typeOfReportingSource">1</Item>
+            <Item naaccrId="behaviorCodeIcdO3">3</Item>
+            <Item naaccrId="csMetsAtDxBrain">9</Item>
+            <Item naaccrId="csExtension">560</Item>
+            <Item naaccrId="rxSummSystemicSurSeq">9</Item>
+            <Item naaccrId="rxSummOther">9</Item>
+            <Item naaccrId="csMetsEval">3</Item>
+            <Item naaccrId="derivedAjcc7T">300</Item>
+        </Tumor>
+    </Patient>
+    <Patient>
+        <Item naaccrId="nameMiddle">Cara</Item>
+        <Item naaccrId="patientIdNumber">00000007</Item>
+        <Item naaccrId="nameMaiden">Choy</Item>
+        <Item naaccrId="birthplaceCountry">USA</Item>
+        <Item naaccrId="vitalStatus">1</Item>
+        <Item naaccrId="computedEthnicity">4</Item>
+        <Item naaccrId="causeOfDeath">0000</Item>
+        <Item naaccrId="icdRevisionNumber">0</Item>
+        <Item naaccrId="nameFirst">Eduardo</Item>
+        <Item naaccrId="raceNapiia">06</Item>
+        <Item naaccrId="socialSecurityNumber">000990007</Item>
+        <Item naaccrId="spanishHispanicOrigin">0</Item>
+        <Item naaccrId="nhiaDerivedHispOrigin">0</Item>
+        <Item naaccrId="sex">2</Item>
+        <Item naaccrId="dateOfBirth">19570915</Item>
+        <Item naaccrId="race5">88</Item>
+        <Item naaccrId="nameLast">Bruen</Item>
+        <Item naaccrId="race1">06</Item>
+        <Item naaccrId="race2">88</Item>
+        <Item naaccrId="computedEthnicitySource">2</Item>
+        <Item naaccrId="race3">88</Item>
+        <Item naaccrId="race4">88</Item>
+        <Item naaccrId="dateOfLastContact">20171215</Item>
+        <Item naaccrId="birthplaceState">HI</Item>
+        <test:PATIENT>
+            <test:CONTACT enabled="false"/>
+            <test:EMAIL>00000007@server.us</test:EMAIL>
+        </test:PATIENT>
+        <Tumor>
+            <Item naaccrId="seerRecordNumber">01</Item>
+            <Item naaccrId="rxSummSurgicalMargins">9</Item>
+            <Item naaccrId="rxSummSurgRadSeq">9</Item>
+            <Item naaccrId="multiplicityCounter">99</Item>
+            <Item naaccrId="rxSummBrm">99</Item>
+            <Item naaccrId="sequenceNumberCentral">00</Item>
+            <Item naaccrId="dateOfDiagnosis">20171215</Item>
+            <Item naaccrId="rxSummRadiation">9</Item>
+            <Item naaccrId="primarySite">C421</Item>
+            <Item naaccrId="multTumRptAsOnePrim">99</Item>
+            <Item naaccrId="dateInitialRxSeer">20171215</Item>
+            <Item naaccrId="censusTrPovertyIndictr">9</Item>
+            <Item naaccrId="censusTrCertainty2000">9</Item>
+            <Item naaccrId="tumorRecordNumber">01</Item>
+            <Item naaccrId="grade">9</Item>
+            <Item naaccrId="censusTrCertainty2010">9</Item>
+            <Item naaccrId="rxSummPalliativeProc">9</Item>
+            <Item naaccrId="rxSummSurgPrimSite">99</Item>
+            <Item naaccrId="rxSummTransplntEndocr">99</Item>
+            <Item naaccrId="rxSummSurgOthRegDis">9</Item>
+            <Item naaccrId="rxSummDxStgProc">09</Item>
+            <Item naaccrId="rxSummTreatmentStatus">9</Item>
+            <Item naaccrId="dateConclusiveDx">20171215</Item>
+            <Item naaccrId="histologicTypeIcdO3">9989</Item>
+            <Item naaccrId="dateOfMultTumors">20171215</Item>
+            <Item naaccrId="rxSummScopeRegLnSur">9</Item>
+            <Item naaccrId="seerCodingSysCurrent">F</Item>
+            <Item naaccrId="maritalStatusAtDx">5</Item>
+            <Item naaccrId="laterality">9</Item>
+            <Item naaccrId="primaryPayerAtDx">99</Item>
+            <Item naaccrId="diagnosticConfirmation">1</Item>
+            <Item naaccrId="censusTract2000">999999</Item>
+            <Item naaccrId="rxSummHormone">99</Item>
+            <Item naaccrId="typeOfReportingSource">1</Item>
+            <Item naaccrId="seerTypeOfFollowUp">2</Item>
+            <Item naaccrId="ageAtDiagnosis">060</Item>
+            <Item naaccrId="rxSummRadToCns">9</Item>
+            <Item naaccrId="behaviorCodeIcdO3">3</Item>
+            <Item naaccrId="censusTract2010">999999</Item>
+            <Item naaccrId="reasonForNoSurgery">8</Item>
+            <Item naaccrId="rxSummSystemicSurSeq">9</Item>
+            <Item naaccrId="rxSummChemo">99</Item>
+            <Item naaccrId="rxSummOther">9</Item>
+        </Tumor>
+    </Patient>
+    <Patient>
+        <Item naaccrId="nameMiddle">Bridget</Item>
+        <Item naaccrId="patientIdNumber">00000008</Item>
+        <Item naaccrId="nameMaiden">Maldonado</Item>
+        <Item naaccrId="birthplaceCountry">USA</Item>
+        <Item naaccrId="vitalStatus">1</Item>
+        <Item naaccrId="computedEthnicity">7</Item>
+        <Item naaccrId="causeOfDeath">0000</Item>
+        <Item naaccrId="icdRevisionNumber">0</Item>
+        <Item naaccrId="nameFirst">Ruthann</Item>
+        <Item naaccrId="raceNapiia">01</Item>
+        <Item naaccrId="socialSecurityNumber">000990008</Item>
+        <Item naaccrId="spanishHispanicOrigin">0</Item>
+        <Item naaccrId="nhiaDerivedHispOrigin">7</Item>
+        <Item naaccrId="sex">2</Item>
+        <Item naaccrId="dateOfBirth">19460615</Item>
+        <Item naaccrId="race5">88</Item>
+        <Item naaccrId="nameLast">Jaskolski</Item>
+        <Item naaccrId="race1">01</Item>
+        <Item naaccrId="race2">88</Item>
+        <Item naaccrId="computedEthnicitySource">2</Item>
+        <Item naaccrId="race3">88</Item>
+        <Item naaccrId="race4">88</Item>
+        <Item naaccrId="dateOfLastContact">20170115</Item>
+        <Item naaccrId="birthplaceState">DE</Item>
+        <test:PATIENT>
+            <test:CONTACT enabled="true"/>
+            <test:EMAIL>00000008@server.us</test:EMAIL>
+        </test:PATIENT>
+        <Tumor>
+            <Item naaccrId="seerRecordNumber">01</Item>
+            <Item naaccrId="rxSummSurgicalMargins">9</Item>
+            <Item naaccrId="rxSummSurgRadSeq">9</Item>
+            <Item naaccrId="multiplicityCounter">99</Item>
+            <Item naaccrId="rxSummBrm">99</Item>
+            <Item naaccrId="sequenceNumberCentral">01</Item>
+            <Item naaccrId="dateOfDiagnosis">20170515</Item>
+            <Item naaccrId="rxSummRadiation">9</Item>
+            <Item naaccrId="primarySite">C502</Item>
+            <Item naaccrId="multTumRptAsOnePrim">99</Item>
+            <Item naaccrId="dateInitialRxSeer">20170515</Item>
+            <Item naaccrId="censusTrPovertyIndictr">9</Item>
+            <Item naaccrId="censusTrCertainty2000">9</Item>
+            <Item naaccrId="tumorRecordNumber">01</Item>
+            <Item naaccrId="grade">9</Item>
+            <Item naaccrId="censusTrCertainty2010">9</Item>
+            <Item naaccrId="rxSummPalliativeProc">9</Item>
+            <Item naaccrId="rxSummSurgPrimSite">99</Item>
+            <Item naaccrId="rxSummTransplntEndocr">99</Item>
+            <Item naaccrId="rxSummSurgOthRegDis">9</Item>
+            <Item naaccrId="rxSummDxStgProc">09</Item>
+            <Item naaccrId="rxSummTreatmentStatus">9</Item>
+            <Item naaccrId="dateConclusiveDx">20170515</Item>
+            <Item naaccrId="histologicTypeIcdO3">8500</Item>
+            <Item naaccrId="dateOfMultTumors">20170515</Item>
+            <Item naaccrId="rxSummScopeRegLnSur">9</Item>
+            <Item naaccrId="seerCodingSysCurrent">F</Item>
+            <Item naaccrId="maritalStatusAtDx">4</Item>
+            <Item naaccrId="laterality">9</Item>
+            <Item naaccrId="primaryPayerAtDx">99</Item>
+            <Item naaccrId="diagnosticConfirmation">1</Item>
+            <Item naaccrId="censusTract2000">999999</Item>
+            <Item naaccrId="rxSummHormone">99</Item>
+            <Item naaccrId="typeOfReportingSource">1</Item>
+            <Item naaccrId="seerTypeOfFollowUp">2</Item>
+            <Item naaccrId="ageAtDiagnosis">070</Item>
+            <Item naaccrId="rxSummRadToCns">9</Item>
+            <Item naaccrId="behaviorCodeIcdO3">3</Item>
+            <Item naaccrId="censusTract2010">999999</Item>
+            <Item naaccrId="reasonForNoSurgery">8</Item>
+            <Item naaccrId="rxSummSystemicSurSeq">9</Item>
+            <Item naaccrId="rxSummChemo">99</Item>
+            <Item naaccrId="rxSummOther">9</Item>
+            <Item naaccrId="textRemarks"><![CDATA[
+                NORTH AMERICAN ASSOCIATION OF CENTRAL CANCER REGISTRIES, INC. (NAACCR)
+
+                ARTICLE I. Scope and Purpose
+
+                The North American Association of Central Cancer Registries, Inc. (NAACCR), the “Association,” is a professional organization that develops and promotes uniform data standards for cancer registration; provides education and training; certifies population-based registries; aggregates and publishes data from central cancer registries; and promotes the use of cancer surveillance data and systems for cancer control and epidemiologic research, public health programs, and patient care to reduce the burden of cancer in North America.
+
+                ARTICLE II. Membership
+
+                Section 1. Classification of Membership
+
+                The four classes of membership shall be:
+
+                Full: Full member organizations are central registries, which are, or have the potential to become, population-based registries.
+                Individual: Individual members are those persons who are not currently working in a member organization who have demonstrated career and professional commitments and interests that are consistent with or complementary to those of NAACCR. Candidates for Individual Membership must be able to demonstrate involvement or activity in one or more of the following areas: cancer epidemiology, patient care, cancer control, cancer registration, professional education, research, and biostatistics. Each candidate must make a commitment to support NAACCR through active participation in the activities of the Association. Individual members shall be entitled to participate and vote as a member of committees, subcommittees or work groups. Individual members may chair subcommittees or work groups. Individual members may not chair a committee, vote on matters brought before the Membership at the Annual Meeting, nor vote for or hold an elected position in the Association.
+                Sponsoring: Sponsoring member organizations are national professional or national governmental organizations primarily involved in any of the following areas: cancer epidemiology, patient care, cancer control, cancer registration, professional education, research, or biostatistics. Each sponsoring member organization shall be entitled to one vote on each matter submitted to membership vote. No action taken by the Association shall be construed as committing any sponsoring member organization to a prescribed course of action. Each sponsoring member organization may designate one or more representatives from such organization to participate in the Association’s affairs on behalf of such organization. Representatives of sponsoring member organizations may be a member of and chair a committee. Only one representative of a sponsoring member organization shall be entitled to cast that organization’s vote.
+                Sustaining: Sustaining member organizations are organizations interested in promoting the purposes of the Association. No action taken by the Association shall be construed as committing any sustaining member organization to a prescribed course of action. Each sustaining member organization may designate one or more representatives from such organization to participate in the Association’s affairs on behalf of such organization. Sustaining member organizations shall not be entitled to vote, and their representatives shall not be entitled to hold office. Representatives from sustaining member organizations may be a member of and chair a committee.
+
+                Section 2. Application for Membership
+
+                Application for membership shall be submitted in a manner prescribed by the Board of Directors.
+
+                Section 3. Resignation
+
+                Any member may resign by submitting a resignation in writing to the Executive Director.
+
+                Section 4. Application for Continuing Membership
+
+                Each member shall submit an application for continuing membership every three years. This application for continuing membership shall be submitted in a manner prescribed by the Board of Directors.
+            ]]></Item>
+        </Tumor>
+        <Tumor>
+            <Item naaccrId="seerRecordNumber">02</Item>
+            <Item naaccrId="rxSummSurgicalMargins">9</Item>
+            <Item naaccrId="rxSummSurgRadSeq">9</Item>
+            <Item naaccrId="multiplicityCounter">99</Item>
+            <Item naaccrId="rxSummBrm">99</Item>
+            <Item naaccrId="sequenceNumberCentral">02</Item>
+            <Item naaccrId="dateOfDiagnosis">20170115</Item>
+            <Item naaccrId="rxSummRadiation">9</Item>
+            <Item naaccrId="primarySite">C504</Item>
+            <Item naaccrId="multTumRptAsOnePrim">99</Item>
+            <Item naaccrId="dateInitialRxSeer">20170115</Item>
+            <Item naaccrId="censusTrPovertyIndictr">9</Item>
+            <Item naaccrId="censusTrCertainty2000">9</Item>
+            <Item naaccrId="tumorRecordNumber">02</Item>
+            <Item naaccrId="grade">9</Item>
+            <Item naaccrId="censusTrCertainty2010">9</Item>
+            <Item naaccrId="rxSummPalliativeProc">9</Item>
+            <Item naaccrId="rxSummSurgPrimSite">99</Item>
+            <Item naaccrId="rxSummTransplntEndocr">99</Item>
+            <Item naaccrId="rxSummSurgOthRegDis">9</Item>
+            <Item naaccrId="rxSummDxStgProc">09</Item>
+            <Item naaccrId="rxSummTreatmentStatus">9</Item>
+            <Item naaccrId="dateConclusiveDx">20170115</Item>
+            <Item naaccrId="histologicTypeIcdO3">8500</Item>
+            <Item naaccrId="dateOfMultTumors">20170115</Item>
+            <Item naaccrId="rxSummScopeRegLnSur">9</Item>
+            <Item naaccrId="seerCodingSysCurrent">F</Item>
+            <Item naaccrId="maritalStatusAtDx">5</Item>
+            <Item naaccrId="laterality">9</Item>
+            <Item naaccrId="primaryPayerAtDx">99</Item>
+            <Item naaccrId="diagnosticConfirmation">1</Item>
+            <Item naaccrId="censusTract2000">999999</Item>
+            <Item naaccrId="rxSummHormone">99</Item>
+            <Item naaccrId="typeOfReportingSource">1</Item>
+            <Item naaccrId="seerTypeOfFollowUp">2</Item>
+            <Item naaccrId="ageAtDiagnosis">070</Item>
+            <Item naaccrId="rxSummRadToCns">9</Item>
+            <Item naaccrId="behaviorCodeIcdO3">3</Item>
+            <Item naaccrId="censusTract2010">999999</Item>
+            <Item naaccrId="reasonForNoSurgery">8</Item>
+            <Item naaccrId="rxSummSystemicSurSeq">9</Item>
+            <Item naaccrId="rxSummChemo">99</Item>
+            <Item naaccrId="rxSummOther">9</Item>
+            <Item naaccrId="textRemarks"><![CDATA[
+                NORTH AMERICAN ASSOCIATION OF CENTRAL CANCER REGISTRIES, INC. (NAACCR)
+
+                ARTICLE I. Scope and Purpose
+
+                The North American Association of Central Cancer Registries, Inc. (NAACCR), the “Association,” is a professional organization that develops and promotes uniform data standards for cancer registration; provides education and training; certifies population-based registries; aggregates and publishes data from central cancer registries; and promotes the use of cancer surveillance data and systems for cancer control and epidemiologic research, public health programs, and patient care to reduce the burden of cancer in North America.
+
+                ARTICLE II. Membership
+
+                Section 1. Classification of Membership
+
+                The four classes of membership shall be:
+
+                Full: Full member organizations are central registries, which are, or have the potential to become, population-based registries.
+                Individual: Individual members are those persons who are not currently working in a member organization who have demonstrated career and professional commitments and interests that are consistent with or complementary to those of NAACCR. Candidates for Individual Membership must be able to demonstrate involvement or activity in one or more of the following areas: cancer epidemiology, patient care, cancer control, cancer registration, professional education, research, and biostatistics. Each candidate must make a commitment to support NAACCR through active participation in the activities of the Association. Individual members shall be entitled to participate and vote as a member of committees, subcommittees or work groups. Individual members may chair subcommittees or work groups. Individual members may not chair a committee, vote on matters brought before the Membership at the Annual Meeting, nor vote for or hold an elected position in the Association.
+                Sponsoring: Sponsoring member organizations are national professional or national governmental organizations primarily involved in any of the following areas: cancer epidemiology, patient care, cancer control, cancer registration, professional education, research, or biostatistics. Each sponsoring member organization shall be entitled to one vote on each matter submitted to membership vote. No action taken by the Association shall be construed as committing any sponsoring member organization to a prescribed course of action. Each sponsoring member organization may designate one or more representatives from such organization to participate in the Association’s affairs on behalf of such organization. Representatives of sponsoring member organizations may be a member of and chair a committee. Only one representative of a sponsoring member organization shall be entitled to cast that organization’s vote.
+                Sustaining: Sustaining member organizations are organizations interested in promoting the purposes of the Association. No action taken by the Association shall be construed as committing any sustaining member organization to a prescribed course of action. Each sustaining member organization may designate one or more representatives from such organization to participate in the Association’s affairs on behalf of such organization. Sustaining member organizations shall not be entitled to vote, and their representatives shall not be entitled to hold office. Representatives from sustaining member organizations may be a member of and chair a committee.
+
+                Section 2. Application for Membership
+
+                Application for membership shall be submitted in a manner prescribed by the Board of Directors.
+
+                Section 3. Resignation
+
+                Any member may resign by submitting a resignation in writing to the Executive Director.
+
+                Section 4. Application for Continuing Membership
+
+                Each member shall submit an application for continuing membership every three years. This application for continuing membership shall be submitted in a manner prescribed by the Board of Directors.
+            ]]></Item>
+        </Tumor>
+    </Patient>
+    <Patient>
+        <Item naaccrId="nameMiddle">B.</Item>
+        <Item naaccrId="patientIdNumber">00000009</Item>
+        <Item naaccrId="birthplaceCountry">USA</Item>
+        <Item naaccrId="vitalStatus">1</Item>
+        <Item naaccrId="causeOfDeath">0000</Item>
+        <Item naaccrId="icdRevisionNumber">0</Item>
+        <Item naaccrId="nameFirst">Mitchell</Item>
+        <Item naaccrId="raceNapiia">01</Item>
+        <Item naaccrId="socialSecurityNumber">000990009</Item>
+        <Item naaccrId="spanishHispanicOrigin">0</Item>
+        <Item naaccrId="nhiaDerivedHispOrigin">0</Item>
+        <Item naaccrId="sex">1</Item>
+        <Item naaccrId="dateOfBirth">19670515</Item>
+        <Item naaccrId="race5">88</Item>
+        <Item naaccrId="nameLast">Adams</Item>
+        <Item naaccrId="race1">01</Item>
+        <Item naaccrId="race2">88</Item>
+        <Item naaccrId="race3">88</Item>
+        <Item naaccrId="race4">88</Item>
+        <Item naaccrId="dateOfLastContact">20181115</Item>
+        <Item naaccrId="birthplaceState">GA</Item>
+        <test:PATIENT>
+            <test:CONTACT enabled="false"/>
+            <test:EMAIL>00000009@server.us</test:EMAIL>
+        </test:PATIENT>
+        <Tumor>
+            <Item naaccrId="seerRecordNumber">01</Item>
+            <Item naaccrId="rxSummSurgicalMargins">9</Item>
+            <Item naaccrId="rxSummSurgRadSeq">9</Item>
+            <Item naaccrId="multiplicityCounter">99</Item>
+            <Item naaccrId="rxSummBrm">99</Item>
+            <Item naaccrId="sequenceNumberCentral">00</Item>
+            <Item naaccrId="dateOfDiagnosis">20181115</Item>
+            <Item naaccrId="rxSummRadiation">9</Item>
+            <Item naaccrId="primarySite">C421</Item>
+            <Item naaccrId="multTumRptAsOnePrim">99</Item>
+            <Item naaccrId="dateInitialRxSeer">20181115</Item>
+            <Item naaccrId="censusTrPovertyIndictr">9</Item>
+            <Item naaccrId="censusTrCertainty2000">9</Item>
+            <Item naaccrId="tumorRecordNumber">01</Item>
+            <Item naaccrId="grade">9</Item>
+            <Item naaccrId="censusTrCertainty2010">9</Item>
+            <Item naaccrId="rxSummPalliativeProc">9</Item>
+            <Item naaccrId="rxSummSurgPrimSite">99</Item>
+            <Item naaccrId="rxSummTransplntEndocr">99</Item>
+            <Item naaccrId="rxSummSurgOthRegDis">9</Item>
+            <Item naaccrId="rxSummDxStgProc">09</Item>
+            <Item naaccrId="rxSummTreatmentStatus">9</Item>
+            <Item naaccrId="dateConclusiveDx">20181115</Item>
+            <Item naaccrId="histologicTypeIcdO3">9861</Item>
+            <Item naaccrId="dateOfMultTumors">20181115</Item>
+            <Item naaccrId="rxSummScopeRegLnSur">9</Item>
+            <Item naaccrId="seerCodingSysCurrent">F</Item>
+            <Item naaccrId="maritalStatusAtDx">4</Item>
+            <Item naaccrId="laterality">9</Item>
+            <Item naaccrId="primaryPayerAtDx">99</Item>
+            <Item naaccrId="diagnosticConfirmation">1</Item>
+            <Item naaccrId="censusTract2000">999999</Item>
+            <Item naaccrId="rxSummHormone">99</Item>
+            <Item naaccrId="typeOfReportingSource">1</Item>
+            <Item naaccrId="seerTypeOfFollowUp">2</Item>
+            <Item naaccrId="ageAtDiagnosis">051</Item>
+            <Item naaccrId="rxSummRadToCns">9</Item>
+            <Item naaccrId="behaviorCodeIcdO3">3</Item>
+            <Item naaccrId="censusTract2010">999999</Item>
+            <Item naaccrId="reasonForNoSurgery">8</Item>
+            <Item naaccrId="rxSummSystemicSurSeq">9</Item>
+            <Item naaccrId="rxSummChemo">99</Item>
+            <Item naaccrId="rxSummOther">9</Item>
+        </Tumor>
+    </Patient>
+</NaaccrData>
