@@ -6,7 +6,7 @@
 
 	<groupId>edu.uky.kcr</groupId>
 	<artifactId>naaccrxml-commandline</artifactId>
-	<version>1.8</version>
+	<version>1.8.1</version>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -30,11 +30,6 @@
 			<artifactId>algorithms</artifactId>
 			<version>2.14</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>com.fasterxml.woodstox</groupId>-->
-<!--			<artifactId>woodstox-core</artifactId>-->
-<!--			<version>6.0.3</version>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>com.fasterxml</groupId>
 			<artifactId>aalto-xml</artifactId>
@@ -86,34 +81,6 @@
 
 	<build>
 		<plugins>
-<!--			<plugin>-->
-<!--				<groupId>org.apache.maven.plugins</groupId>-->
-<!--				<artifactId>maven-shade-plugin</artifactId>-->
-<!--				<version>3.2.1</version>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<phase>package</phase>-->
-<!--						<goals>-->
-<!--							<goal>shade</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<finalName>${project.artifactId}-${project.version}</finalName>-->
-<!--							<transformers>-->
-<!--								<transformer-->
-<!--										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-<!--									<mainClass>edu.uky.kcr.nax.NaxCommandLineApp</mainClass>-->
-<!--									<manifestEntries>-->
-<!--										<App-Version>${project.version}</App-Version>-->
-<!--										<Build-Time>${maven.build.timestamp}</Build-Time>-->
-<!--										<Built-By>build</Built-By>-->
-<!--										<Class-Path>./ext/*</Class-Path>-->
-<!--									</manifestEntries>-->
-<!--								</transformer>-->
-<!--							</transformers>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
