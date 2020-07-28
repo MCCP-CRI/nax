@@ -218,7 +218,7 @@ public class NaxCommandLineApp
 							}
 							else
 							{
-								naxConfig.withItemScriptString(naaccrId, itemScriptArguments[i]);
+								naxConfig.withItemScriptString(naaccrId, itemScriptArgumentArray[1]);
 							}
 						}
 					}
@@ -412,7 +412,12 @@ public class NaxCommandLineApp
 								FilenameUtils
 										.getExtension(currentInputFile.getName()));
 
-						File outputFileInDir = new File(outputFile, outputFilename);
+						File outputFileInDir = null;
+
+						if (outputFile != null)
+						{
+							outputFileInDir = new File(outputFile, outputFilename);
+						}
 
 						try (ProgressTrackingDigestInputStream inputStream = ProgressTrackingDigestInputStream.newInstance(currentInputFile))
 						{

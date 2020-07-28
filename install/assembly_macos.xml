@@ -2,15 +2,15 @@
 		xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
-	<id>naaccrxml-commandline-macos</id>
+	<id>macos</id>
 	<formats>
 		<format>zip</format>
 	</formats>
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<fileSets>
 		<fileSet>
-			<directory>install/macOS/jvm</directory>
-			<outputDirectory>${project.artifactId}/jvm</outputDirectory>
+			<directory>install/macOS/bin/jvm</directory>
+			<outputDirectory>${project.artifactId}/bin/jvm</outputDirectory>
 			<includes>
 				<include>**</include>
 			</includes>
@@ -25,12 +25,26 @@
 			<filtered>true</filtered>
 		</fileSet>
 		<fileSet>
-			<directory>install/user-extensions</directory>
-			<outputDirectory>${project.artifactId}/user-extensions</outputDirectory>
+			<directory>install/user-jars</directory>
+			<outputDirectory>${project.artifactId}/bin/user-jars</outputDirectory>
 			<includes>
 				<include>README.txt</include>
 			</includes>
 			<filtered>true</filtered>
+		</fileSet>
+		<fileSet>
+			<directory>scripts</directory>
+			<outputDirectory>${project.artifactId}/scripts</outputDirectory>
+			<includes>
+				<include>**</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>target</directory>
+			<outputDirectory>${project.artifactId}/bin/lib</outputDirectory>
+			<includes>
+				<include>${project.artifactId}-${project.version}.jar</include>
+			</includes>
 		</fileSet>
 		<fileSet>
 			<directory>install/macOS</directory>
@@ -42,11 +56,4 @@
 			<filtered>true</filtered>
 		</fileSet>
 	</fileSets>
-	<dependencySets>
-		<dependencySet>
-			<outputDirectory>${project.artifactId}/lib</outputDirectory>
-			<useProjectArtifact>true</useProjectArtifact>
-			<scope>runtime</scope>
-		</dependencySet>
-	</dependencySets>
 </assembly>

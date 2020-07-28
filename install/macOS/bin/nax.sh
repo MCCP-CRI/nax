@@ -1,2 +1,2 @@
 #!/bin/sh
-$(dirname $0)/../jvm/bin/java -cp $(dirname $0)/../lib/*:$(dirname $0)/../user-extensions/* edu.uky.kcr.nax.NaxCommandLineApp "$@"
+$(dirname $0)/jvm/bin/java -cp $(dirname $0)/lib/${project.artifactId}-${project.version}.jar:$(dirname $0)/user-jars/* edu.uky.kcr.nax.NaxCommandLineApp "$@"

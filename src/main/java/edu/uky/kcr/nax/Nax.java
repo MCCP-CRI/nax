@@ -40,6 +40,7 @@ import groovy.lang.Script;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.staxmate.dom.DOMConverter;
 import org.w3c.dom.Document;
@@ -61,6 +62,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,7 +114,6 @@ public class Nax
 	}
 
 	public NaxResult process(ProgressTrackingDigestInputStream naxInfoInputStream)
-			throws XMLStreamException, IOException, ParserConfigurationException, SAXException
 	{
 		return process(naxInfoInputStream, null);
 	}
@@ -120,7 +121,6 @@ public class Nax
 	public NaxResult process(
 			ProgressTrackingDigestInputStream naxInfoInputStream,
 			File outputFile)
-			throws XMLStreamException, IOException, ParserConfigurationException, SAXException
 	{
 		NaxResult naxResult = new NaxResult();
 
@@ -177,6 +177,7 @@ public class Nax
 
 			int lastPercent = 0;
 			NaaccrData naaccrData = new NaaccrData();
+			boolean foundNaaccrDataElement = false;
 
 			xmlWriter.writeStartDocument(xmlStreamReader.getCharacterEncodingScheme(), xmlStreamReader.getVersion());
 			xmlWriter.writeCharacters("\n");
@@ -212,6 +213,8 @@ public class Nax
 						{
 							case NaaccrConstants.NAACCR_DATA_ELEMENT:
 							{
+								foundNaaccrDataElement = true;
+
 								handleStartNaaccrDataElement(naaccrData, naxResult, xmlStreamReader, xmlWriter);
 
 								break;
@@ -461,12 +464,19 @@ public class Nax
 
 							default:
 							{
-								Document document = domConverter.buildDocument(xmlStreamReader, documentBuilder);
-								Element extraElement = document.getDocumentElement();
-
-								if (includeOtherNamespaceElement(extraElement, naaccrData, naxResult))
+								if (foundNaaccrDataElement)
 								{
-									domConverter.writeFragment(extraElement, xmlWriter);
+									Document document = domConverter.buildDocument(xmlStreamReader, documentBuilder);
+									Element extraElement = document.getDocumentElement();
+
+									if (includeOtherNamespaceElement(extraElement, naaccrData, naxResult))
+									{
+										domConverter.writeFragment(extraElement, xmlWriter);
+									}
+								}
+								else
+								{
+									throw new Exception("Root NaaccrData element not found, XML does not look like NAACCR XML.");
 								}
 
 								break;
@@ -498,6 +508,16 @@ public class Nax
 
 			xmlWriter.flush();
 			xmlWriter.close();
+
+			naxResult.setParsingSuccess(true);
+		}
+		catch (Exception exception)
+		{
+			naxResult.setParsingSuccess(false);
+			naxResult.setParsingErrorMessage(exception.getMessage());
+			naxResult.setParsingErrorMessageDetails(ExceptionUtils.getStackTrace(exception));
+
+			exception.printStackTrace();
 		}
 		finally
 		{

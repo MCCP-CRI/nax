@@ -13,9 +13,9 @@
 3. Open terminal and change directory to the unzipped `naaccr-commandline` directory. Run the `Install_on_macOS.sh` script.
 4. Open a new Terminal window and type "nax" to see Help.
 
-#### Other OS
+#### Other OS (such as Linux)
 1. Download and install a Java Runtime version 11 or later, such as [AdoptOpenJDK 11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot)
-2. [Download the latest jar file release](../../releases)
+2. [Download the latest Java file release](../../releases)
 3. Open a terminal window and run the jar file:
     
     `java -jar naaccr-commandline-<version>.jar`
@@ -187,6 +187,6 @@ When writing Groovy scripts for nax, the following resources are imported automa
 * The class [SeerSiteRecodeUtils](https://github.com/imsweb/algorithms/blob/master/src/main/java/com/imsweb/algorithms/seersiterecode/SeerSiteRecodeUtils.java)
 * The class [IcccRecodeUtils](https://github.com/imsweb/algorithms/blob/master/src/main/java/com/imsweb/algorithms/iccc/IcccRecodeUtils.java)
 
-If you would like to use your own Java libraries in a Groovy script, add the jar files to the \<installation-directory>/user-extensions directory. 
+If you would like to use your own Java libraries in a Groovy script, add the jar files to the \<installation-directory>/bin/user-jars directory. 
 
 When specifying a Groovy script as a command-line argument, you can specify the actual script as a literal String enclosed in double-quotes or you can specify the file location of a Groovy script. 

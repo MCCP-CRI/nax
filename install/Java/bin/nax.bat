@@ -1,2 +1,2 @@
 @echo off
-java -cp %~dp0..\lib\*;%~dp0..\user-extensions\* edu.uky.kcr.nax.NaxCommandLineApp %*
+java -cp %~dp0lib\${project.artifactId}-${project.version}.jar;%~dp0user-jars\* edu.uky.kcr.nax.NaxCommandLineApp %*

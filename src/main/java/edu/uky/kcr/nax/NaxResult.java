@@ -51,6 +51,10 @@ public class NaxResult
 
 	private NaxFileInfo inputFileInfo = null;
 
+	private boolean parsingSuccess = false;
+	private String parsingErrorMessage = null;
+	private String parsingErrorMessageDetails = null;
+
 	public NaxResult()
 	{
 
@@ -117,5 +121,35 @@ public class NaxResult
 	public void setOutputFile(File outputFile)
 	{
 		this.outputFile = outputFile;
+	}
+
+	public boolean isParsingSuccess()
+	{
+		return parsingSuccess;
+	}
+
+	public void setParsingSuccess(boolean parsingSuccess)
+	{
+		this.parsingSuccess = parsingSuccess;
+	}
+
+	public String getParsingErrorMessage()
+	{
+		return parsingErrorMessage;
+	}
+
+	public void setParsingErrorMessage(String parsingErrorMessage)
+	{
+		this.parsingErrorMessage = parsingErrorMessage;
+	}
+
+	public String getParsingErrorMessageDetails()
+	{
+		return parsingErrorMessageDetails;
+	}
+
+	public void setParsingErrorMessageDetails(String parsingErrorMessageDetails)
+	{
+		this.parsingErrorMessageDetails = parsingErrorMessageDetails;
 	}
 }

@@ -6,7 +6,7 @@
 
 	<groupId>edu.uky.kcr</groupId>
 	<artifactId>naaccrxml-commandline</artifactId>
-	<version>1.9</version>
+	<version>1.10</version>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -83,22 +83,44 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.artifactId}-${project.version}</finalName>
+							<transformers>
+								<transformer
+										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<manifestEntries>
+										<App-Version>${project.version}</App-Version>
+										<Build-Time>${maven.build.timestamp}</Build-Time>
+										<Built-By>mccp-cri-build</Built-By>
+									</manifestEntries>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
 				<configuration>
-					<finalName>${project.artifactId}-${project.version}</finalName>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
-						<manifestEntries>
-							<App-Version>${project.version}</App-Version>
-							<Build-Time>${maven.build.timestamp}</Build-Time>
-							<Built-By>mccp-cri-build</Built-By>
-						</manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
 				<configuration>
 					<source>11</source>
 					<target>11</target>
@@ -107,44 +129,23 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.3.0</version>
 				<executions>
 					<execution>
-						<id>assemble-macos-zip</id>
+						<id>make-assembly</id>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
-						<configuration>
-							<finalName>${project.artifactId}-${project.version}-macos</finalName>
-							<descriptor>install/assembly_macos.xml</descriptor>
-							<appendAssemblyId>false</appendAssemblyId>
-						</configuration>
-					</execution>
-					<execution>
-						<id>assemble-windows-zip</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<finalName>${project.artifactId}-${project.version}-windows</finalName>
-							<descriptor>install/assembly_windows.xml</descriptor>
-							<appendAssemblyId>false</appendAssemblyId>
-						</configuration>
-					</execution>
-					<execution>
-						<id>assemble-java-zip</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<finalName>${project.artifactId}-${project.version}-java</finalName>
-							<descriptor>install/assembly_java.xml</descriptor>
-							<appendAssemblyId>false</appendAssemblyId>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<descriptors>
+						<descriptor>install/assembly_macos.xml</descriptor>
+						<descriptor>install/assembly_windows.xml</descriptor>
+						<descriptor>install/assembly_java.xml</descriptor>
+					</descriptors>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
