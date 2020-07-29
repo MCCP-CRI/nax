@@ -6,7 +6,7 @@
 
 	<groupId>edu.uky.kcr</groupId>
 	<artifactId>naaccrxml-commandline</artifactId>
-	<version>1.10</version>
+	<version>1.11</version>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -64,6 +64,11 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>

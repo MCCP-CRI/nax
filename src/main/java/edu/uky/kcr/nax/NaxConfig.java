@@ -56,6 +56,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -85,6 +86,31 @@ public class NaxConfig
 	private NaxFileInfo replacementFileInfo = null;
 	private List<NaxFileInfo> scriptFiles = null;
 	private List<String> includedItems = null;
+
+	@JsonIgnore
+	private String emailSmtpHost = null;
+	@JsonIgnore
+	private List<String> emailToList = null;
+	@JsonIgnore
+	private String emailFrom = null;
+	@JsonIgnore
+	private String emailSubject = null;
+	@JsonIgnore
+	private String emailUsername = null;
+	@JsonIgnore
+	private String emailPassword = null;
+	@JsonIgnore
+	private Integer emailSmtpPort = null;
+	@JsonIgnore
+	private String emailSslSmtpPort = null;
+	@JsonIgnore
+	private Boolean emailSslCheckServerIdentity = null;
+	@JsonIgnore
+	private Boolean emailStartTlsEnabled = null;
+	@JsonIgnore
+	private Boolean emailStartTlsRequired = null;
+	@JsonIgnore
+	private Boolean emailSslOnConnect = null;
 
 	@JsonIgnore
 	private Map<String, Map<String, Script>> valueCountsScripts = null;
@@ -119,8 +145,87 @@ public class NaxConfig
 		setGroovyShell(new GroovyShell(compilerConfiguration));
 	}
 
-	public NaxConfig withConstantValue(String key,
-									   String value)
+	public NaxConfig withEmailSmtpHost(String emailSmtpHost)
+	{
+		setEmailSmtpHost(emailSmtpHost);
+
+		return this;
+	}
+
+	public NaxConfig withEmailTo(String[] emailTo)
+	{
+		if (emailTo != null)
+		{
+			getEmailToList().addAll(Arrays.asList(emailTo));
+		}
+
+		return this;
+	}
+
+	public NaxConfig withEmailFrom(String emailFrom)
+	{
+		setEmailFrom(emailFrom);
+
+		return this;
+	}
+
+	public NaxConfig withEmailSubject(String emailSubject)
+	{
+		setEmailSubject(emailSubject);
+
+		return this;
+	}
+
+	public NaxConfig withEmailUsernameAndPassword(String emailUsername, String emailPassword)
+	{
+		setEmailUsername(emailUsername);
+		setEmailPassword(emailPassword);
+
+		return this;
+	}
+
+	public NaxConfig withEmailSmtpPort(int smtpPort)
+	{
+		setEmailSmtpPort(smtpPort);
+
+		return this;
+	}
+
+	public NaxConfig withEmailSslSmtpPort(String emailSslSmtpPort)
+	{
+		setEmailSslSmtpPort(emailSslSmtpPort);
+
+		return this;
+	}
+
+	public NaxConfig withEmailSslCheckServerIdentity(boolean emailSslCheckServerIdentity)
+	{
+		setEmailSslCheckServerIdentity(emailSslCheckServerIdentity);
+
+		return this;
+	}
+
+	public NaxConfig withEmailSslOnConnect(boolean emailSslOnConnect)
+	{
+		setEmailSslOnConnect(emailSslOnConnect);
+		return this;
+	}
+
+	public NaxConfig withEmailStartTlsEnabled(boolean emailStartTlsEnabled)
+	{
+		setEmailStartTlsEnabled(emailStartTlsEnabled);
+		return this;
+	}
+
+	public NaxConfig withEmailStartTlsRequired(boolean emailStartTlsRequired)
+	{
+		setEmailStartTlsRequired(emailStartTlsRequired);
+		return this;
+	}
+
+	public NaxConfig withConstantValue(
+			String key,
+			String value)
 	{
 		getConstantValueMap().put(key, value);
 
@@ -324,8 +429,9 @@ public class NaxConfig
 		return returnValue;
 	}
 
-	protected static Script compileScriptFile(GroovyShell groovyShell,
-											  ProgressTrackingDigestInputStream scriptInputStream)
+	protected static Script compileScriptFile(
+			GroovyShell groovyShell,
+			ProgressTrackingDigestInputStream scriptInputStream)
 			throws IOException
 	{
 		String scriptString = IOUtils.toString(scriptInputStream);
@@ -335,9 +441,10 @@ public class NaxConfig
 		return compiledScript;
 	}
 
-	protected static Script compileScriptString(GroovyShell groovyShell,
-												String scriptString,
-												String scriptName)
+	protected static Script compileScriptString(
+			GroovyShell groovyShell,
+			String scriptString,
+			String scriptName)
 	{
 		Script script = groovyShell.parse(scriptString);
 		script.setBinding(new Binding());
@@ -346,14 +453,16 @@ public class NaxConfig
 		return script;
 	}
 
-	protected static Script compileScriptString(GroovyShell groovyShell,
-												String scriptString)
+	protected static Script compileScriptString(
+			GroovyShell groovyShell,
+			String scriptString)
 	{
 		return compileScriptString(groovyShell, scriptString, String.format("%s...%s", StringUtils.left(scriptString, 5), StringUtils.right(scriptString, 5)));
 	}
 
-	protected static List<Script> compileScriptStrings(GroovyShell groovyShell,
-													   List<String> scriptStrings)
+	protected static List<Script> compileScriptStrings(
+			GroovyShell groovyShell,
+			List<String> scriptStrings)
 	{
 		List<Script> compiledScripts = new ArrayList<>();
 
@@ -595,5 +704,125 @@ public class NaxConfig
 	public void setUserDictionaryFiles(List<NaxFileInfo> userDictionaryFiles)
 	{
 		this.userDictionaryFiles = userDictionaryFiles;
+	}
+
+	public String getEmailSmtpHost()
+	{
+		return emailSmtpHost;
+	}
+
+	public void setEmailSmtpHost(String emailSmtpHost)
+	{
+		this.emailSmtpHost = emailSmtpHost;
+	}
+
+	public List<String> getEmailToList()
+	{
+		if (this.emailToList == null)
+		{
+			this.emailToList = new ArrayList<>();
+		}
+
+		return this.emailToList;
+	}
+
+	public String getEmailFrom()
+	{
+		return emailFrom;
+	}
+
+	public void setEmailFrom(String emailFrom)
+	{
+		this.emailFrom = emailFrom;
+	}
+
+	public String getEmailSubject()
+	{
+		return emailSubject;
+	}
+
+	public void setEmailSubject(String emailSubject)
+	{
+		this.emailSubject = emailSubject;
+	}
+
+	public String getEmailUsername()
+	{
+		return emailUsername;
+	}
+
+	public void setEmailUsername(String emailUsername)
+	{
+		this.emailUsername = emailUsername;
+	}
+
+	public String getEmailPassword()
+	{
+		return emailPassword;
+	}
+
+	public void setEmailPassword(String emailPassword)
+	{
+		this.emailPassword = emailPassword;
+	}
+
+	public Integer getEmailSmtpPort()
+	{
+		return emailSmtpPort;
+	}
+
+	public void setEmailSmtpPort(Integer emailSmtpPort)
+	{
+		this.emailSmtpPort = emailSmtpPort;
+	}
+
+	public String getEmailSslSmtpPort()
+	{
+		return emailSslSmtpPort;
+	}
+
+	public void setEmailSslSmtpPort(String emailSslSmtpPort)
+	{
+		this.emailSslSmtpPort = emailSslSmtpPort;
+	}
+
+	public Boolean getEmailSslCheckServerIdentity()
+	{
+		return emailSslCheckServerIdentity;
+	}
+
+	public void setEmailSslCheckServerIdentity(Boolean emailSslCheckServerIdentity)
+	{
+		this.emailSslCheckServerIdentity = emailSslCheckServerIdentity;
+	}
+
+	public Boolean getEmailStartTlsEnabled()
+	{
+		return emailStartTlsEnabled;
+	}
+
+	public void setEmailStartTlsEnabled(Boolean emailStartTlsEnabled)
+	{
+		this.emailStartTlsEnabled = emailStartTlsEnabled;
+	}
+
+	public Boolean getEmailStartTlsRequired()
+	{
+		return emailStartTlsRequired;
+	}
+
+	public void setEmailStartTlsRequired(Boolean emailStartTlsRequired)
+	{
+		this.emailStartTlsRequired = emailStartTlsRequired;
+	}
+
+	public Boolean getEmailSslOnConnect()
+	{
+		return emailSslOnConnect;
+	}
+
+	public void setEmailSslOnConnect(Boolean emailSslOnConnect)
+	{
+		this.emailSslOnConnect = emailSslOnConnect;
 	}
 }

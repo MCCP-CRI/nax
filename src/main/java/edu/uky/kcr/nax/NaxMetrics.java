@@ -89,6 +89,16 @@ public class NaxMetrics
 		this.naaccrIdCounts = naaccrIdCounts;
 	}
 
+	public void setExcludedOtherElementCounts(Map<String, Map<String, Integer>> excludedOtherElementCounts)
+	{
+		this.excludedOtherElementCounts = excludedOtherElementCounts;
+	}
+
+	public void setOtherElementCounts(Map<String, Map<String, Integer>> otherElementCounts)
+	{
+		this.otherElementCounts = otherElementCounts;
+	}
+
 	public void setExcludedNaaccrIdCounts(Map<String, Integer> excludedNaaccrIdCounts)
 	{
 		this.excludedNaaccrIdCounts = excludedNaaccrIdCounts;

@@ -4,21 +4,22 @@
 #### Windows
 1. [Download latest release for Windows](../../releases)
 2. Unzip to a directory such as Documents
-3. In File Explorer, open the unzipped `naaccr-commandline` directory and double click on the `Launch_nax` batch file.
+3. In File Explorer, open the unzipped `naaccrxml-commandline` directory and double click on the `Launch_nax` batch file.
 4. In the command window that opens, type "nax" and hit Enter to see Help.
 
 #### macOS
 1. [Download latest release for macOS](../../releases)
 2. Unzip to a directory such as Documents
-3. Open terminal and change directory to the unzipped `naaccr-commandline` directory. Run the `Install_on_macOS.sh` script.
+3. Open terminal and change directory to the unzipped `naaccrxml-commandline` directory. Run the `Install_on_macOS.sh` script.
 4. Open a new Terminal window and type "nax" to see Help.
 
 #### Other OS (such as Linux)
 1. Download and install a Java Runtime version 11 or later, such as [AdoptOpenJDK 11](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot)
 2. [Download the latest Java file release](../../releases)
-3. Open a terminal window and run the jar file:
+3. Open a terminal and change directory to the unzipped `naaccrxml-commandline` directory.
+4. Launch the Main Java class:
     
-    `java -jar naaccr-commandline-<version>.jar`
+    `java -cp naaccrxml-commandline-<version>.jar edu.uky.kcr.nax.NaxCommandLineApp`
 
 ## Support, Contributions, and Feedback
 For support, feature requests, feedback, or to make contributions, please [open an issue](../../issues/new).

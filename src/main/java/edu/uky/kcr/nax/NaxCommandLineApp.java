@@ -40,12 +40,16 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
 
 import java.io.File;
 import java.io.IOException;
@@ -134,6 +138,13 @@ public class NaxCommandLineApp
 				"vc", "valueCounts", true,
 				"A comma-separated list of naaccrIds to get a count of all values in a file. For continuous values that require data binning before counts, specify a single naaccrId and a Groovy script to 'bin' the data: <naaccrId>=<Groovy script>. (For example, to get counts of all diagnosis years: -vc dateOfDiagnosis=\"left(dateOfDiagnosis, 4)\". This parameter can be specified more than once.");
 
+		options.addOption("ems", "emailSubject", true, "Email Subject line");
+		options.addOption("emh", "emailSmtpHost", true, "Email SMTP hostname");
+		options.addOption("emf", "emailFrom", true, "Email address of sender");
+		options.addOption("emt", "emailTo", true, "Email address of recipient (can specify multiple times)");
+		options.addOption("emu", "emailUsername", true, "Email address of sender");
+		options.addOption("emu", "emailPassword", true, "Email address of sender");
+
 		CommandLineParser parser = new DefaultParser();
 
 		try
@@ -152,6 +163,18 @@ public class NaxCommandLineApp
 			{
 				throw new ParseException("A single input file or directory must be specified.");
 			}
+			else if (StringUtils.isAllEmpty(
+					line.getOptionValue("emailSmtpHost"),
+					line.getOptionValue("emailFrom"),
+					line.getOptionValue("emailTo")) == false &&
+					StringUtils.isAnyEmpty(
+							line.getOptionValue("emailSmtpHost"),
+							line.getOptionValue("emailFrom"),
+							line.getOptionValue("emailTo")))
+			{
+				throw new ParseException(
+						"If any email settings are specified, the following minimum email settings must also be specified: emailSmtpHost, emailFrom, emailTo");
+			}
 			else
 			{
 				Level level = Level.parse(line.getOptionValue(LOGGING_OPTION.getOpt(), DEFAULT_LOG_LEVEL));
@@ -162,7 +185,7 @@ public class NaxCommandLineApp
 				String inputFileString = line.getArgs()[0];
 				File inputFile = new File(inputFileString);
 
-				logger.info(String.format("Input is: %s", inputFileString));
+				logger.info(String.format("Input file is: %s", inputFileString));
 
 				NaxConfig naxConfig = new NaxConfig();
 
@@ -304,6 +327,11 @@ public class NaxCommandLineApp
 					naxConfig.withReplacementMapFile(replacementValuesFile);
 				}
 
+				naxConfig.withEmailSmtpHost(line.getOptionValue("emailSmtpHost"));
+				naxConfig.withEmailSubject(line.getOptionValue("emailSubject"));
+				naxConfig.withEmailFrom(line.getOptionValue("emailFrom"));
+				naxConfig.withEmailTo(line.getOptionValues("emailTo"));
+
 				String[] constantValuesArray = line.getOptionValues("con");
 
 				if (constantValuesArray != null && constantValuesArray.length > 0)
@@ -382,6 +410,7 @@ public class NaxCommandLineApp
 				}
 
 				naxConfig.withIncludeNamespaces(Boolean.valueOf(includeNamespacesString));
+
 
 				Integer metricsLogging = Integer.valueOf(StringUtils.defaultString(line.getOptionValue("met"), "1"));
 
@@ -489,13 +518,85 @@ public class NaxCommandLineApp
 		System.out.println(getFullAppVersionString());
 	}
 
+	private static Email createEmail(NaxResult naxResult)
+			throws EmailException
+	{
+		Email email = new SimpleEmail();
+
+		email.setHostName(naxResult.getNaxConfig().getEmailSmtpHost());
+		email.setFrom(naxResult.getNaxConfig().getEmailFrom());
+
+		if (StringUtils.isEmpty(naxResult.getNaxConfig().getEmailSubject()))
+		{
+			email.setSubject(
+					String.format("nax Result from processing %s on %s", naxResult.getInputFileInfo().getName(), naxResult.getNaxMetrics().getStartTime()));
+		}
+		else
+		{
+			email.setSubject(naxResult.getNaxConfig().getEmailSubject());
+		}
+
+		email.addTo(naxResult.getNaxConfig().getEmailToList().toArray(new String[]{}));
+
+		if (StringUtils.isNoneEmpty(naxResult.getNaxConfig().getEmailUsername(), naxResult.getNaxConfig().getEmailPassword()))
+		{
+			email.setAuthentication(naxResult.getNaxConfig().getEmailUsername(), naxResult.getNaxConfig().getEmailPassword());
+		}
+
+		if (naxResult.getNaxConfig().getEmailSmtpPort() != null)
+		{
+			email.setSmtpPort(naxResult.getNaxConfig().getEmailSmtpPort());
+		}
+
+		if (naxResult.getNaxConfig().getEmailSslCheckServerIdentity() != null)
+		{
+			email.setSSLCheckServerIdentity(naxResult.getNaxConfig().getEmailSslCheckServerIdentity());
+		}
+
+		if (naxResult.getNaxConfig().getEmailStartTlsEnabled() != null)
+		{
+			email.setStartTLSEnabled(naxResult.getNaxConfig().getEmailStartTlsEnabled());
+		}
+
+		if (naxResult.getNaxConfig().getEmailStartTlsRequired() != null)
+		{
+			email.setStartTLSRequired(naxResult.getNaxConfig().getEmailStartTlsRequired());
+		}
+
+		if (naxResult.getNaxConfig().getEmailSslOnConnect() != null)
+		{
+			email.setSSLOnConnect(naxResult.getNaxConfig().getEmailSslOnConnect());
+		}
+
+		if (naxResult.getNaxConfig().getEmailSslSmtpPort() != null)
+		{
+			email.setSslSmtpPort(naxResult.getNaxConfig().getEmailSslSmtpPort());
+		}
+
+		return email;
+	}
+
 	private static void handleResult(
 			NaxResult naxResult,
 			Integer metricsLogging,
 			Integer deleteOutputFiles)
-			throws IOException
+			throws IOException, EmailException
 	{
-		printResult(naxResult, metricsLogging);
+		String resultString = resultAsString(naxResult, metricsLogging);
+
+		logger.info("NaxResult:");
+		System.out.println(resultString);
+
+		if (naxResult.getNaxConfig().getEmailToList().isEmpty() == false &&
+				StringUtils.isNoneEmpty(
+						naxResult.getNaxConfig().getEmailSmtpHost(),
+						naxResult.getNaxConfig().getEmailFrom()))
+		{
+			logger.info("Sending email...");
+			Email email = createEmail(naxResult);
+			email.setMsg(resultString);
+			email.send();
+		}
 
 		if (naxResult.getOutputFile() != null)
 		{
@@ -522,27 +623,34 @@ public class NaxCommandLineApp
 		}
 	}
 
-	private static void printResult(
+	private static String resultAsString(
 			NaxResult naxResult,
 			Integer metricsLogging)
 			throws JsonProcessingException
 	{
-		if (metricsLogging.intValue() > 0)
+		String returnValue = null;
+
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+
+		if (metricsLogging.intValue() == 0)
 		{
-			ObjectMapper objectMapper = new ObjectMapper();
-
-			objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-			objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-
-			if (metricsLogging.intValue() == 1)
-			{
-				naxResult.getNaxMetrics().setNaaccrIdCounts(null);
-				naxResult.getNaxMetrics().setExcludedNaaccrIdCounts(null);
-			}
-
-			logger.info("NaxResult:");
-			System.out.println(String.format("%s", objectMapper.writer().withoutAttribute("").writeValueAsString(naxResult)));
+			naxResult.setNaxMetrics(null);
 		}
+
+		if (metricsLogging.intValue() == 1)
+		{
+			naxResult.getNaxMetrics().setOtherElementCounts(null);
+			naxResult.getNaxMetrics().setExcludedOtherElementCounts(null);
+			naxResult.getNaxMetrics().setNaaccrIdCounts(null);
+			naxResult.getNaxMetrics().setExcludedNaaccrIdCounts(null);
+		}
+
+		returnValue = String.format("%s", objectMapper.writer().withoutAttribute("").writeValueAsString(naxResult));
+
+		return returnValue;
 	}
 
 }
