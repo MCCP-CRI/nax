@@ -37,6 +37,7 @@ import edu.uky.kcr.nax.model.NaaccrDictionary;
 import edu.uky.kcr.nax.model.Patient;
 import edu.uky.kcr.nax.model.Tumor;
 import groovy.lang.Script;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.StringUtils;
@@ -62,11 +63,12 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +77,9 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Processing engine for a Nax run, takes configuration paramaters from a NaxConfig, runs them against an input NAACCR XMl file,
@@ -89,6 +94,7 @@ public class Nax
 	public static final int GZIP_BUFFER = 64 * 1024;
 	private static final int OUTPUT_BUFFER = 1024 * 1024 * 16;
 	private static final int INPUT_BUFFER = 64 * 1024;
+	private static final int PEEK_BUFFER = 8192;
 
 	private Nax()
 	{
@@ -108,54 +114,178 @@ public class Nax
 		return naxConfig;
 	}
 
-	public void setNaxConfig(NaxConfig naxConfig)
+	private void setNaxConfig(NaxConfig naxConfig)
 	{
 		this.naxConfig = naxConfig;
 	}
 
-	public NaxResult process(ProgressTrackingDigestInputStream naxInfoInputStream)
+	public List<NaxResult> process(File inputFile)
 	{
-		return process(naxInfoInputStream, null);
+		return process(inputFile, null);
 	}
 
-	public NaxResult process(
-			ProgressTrackingDigestInputStream naxInfoInputStream,
+	public List<NaxResult> process(
+			File inputFile,
 			File outputFile)
+	{
+		List<NaxResult> naxResultList = new ArrayList<>();
+
+		try (FileInputStream fileInputStream = new FileInputStream(inputFile))
+		{
+			naxResultList.addAll(process(fileInputStream, inputFile.getName(), inputFile.length(), outputFile));
+		}
+		catch (IOException exception)
+		{
+			NaxResult naxResult = new NaxResult();
+			naxResult.setParsingSuccess(false);
+			naxResult.setParsingErrorMessage(exception.getMessage());
+			naxResult.setParsingErrorMessageDetails(ExceptionUtils.getStackTrace(exception));
+			naxResultList.add(naxResult);
+		}
+
+		return naxResultList;
+	}
+
+	public List<NaxResult> process(
+			InputStream inputStream,
+			String name,
+			long size)
+	{
+		return process(inputStream, name, size, null);
+	}
+
+	public List<NaxResult> process(
+			InputStream inputStream,
+			String name,
+			long size,
+			File outputFile)
+	{
+		List<NaxResult> naxResultList = new ArrayList<>();
+
+		try
+		{
+			if (name.endsWith(".zip"))
+			{
+				ZipOutputStream zipOutputStream = null;
+
+				if (outputFile != null)
+				{
+					zipOutputStream = new ZipOutputStream(new FileOutputStream(outputFile));
+				}
+
+				try (ZipInputStream zipInputStream = new ZipInputStream(inputStream))
+				{
+					ZipEntry zipEntry = zipInputStream.getNextEntry();
+
+					while (zipEntry != null)
+					{
+						String zipEntryName = zipEntry.getName();
+
+						//Check file extension of zipentry, skip over zips in zips
+						if (zipEntryName.endsWith(".zip") == false)
+						{
+							//Write to temp file, delete if necessary, add to zip file if good
+							File tempFile = File.createTempFile("nax-", ".xml");
+							NaxResult naxResult = processSingleFile(zipInputStream, String.format("%s/%s", name, zipEntryName), zipEntry.getSize(), tempFile);
+
+							if (outputFile != null)
+							{
+								if (naxResult.isOutputFileDeleted() == false)
+								{
+									zipOutputStream.putNextEntry(new ZipEntry(zipEntryName));
+
+									try (FileInputStream tempFileInputStream = new FileInputStream(tempFile))
+									{
+										logger.info(String.format("Writing nax output file %s to Zip File: %s", zipEntryName, outputFile
+												.getName()));
+										IOUtils.copy(tempFileInputStream, zipOutputStream);
+									}
+
+									naxResult.setOutputFilename(String.format("%s/%s", outputFile.getName(), zipEntryName));
+									naxResult.setOutputFile(null);
+								}
+								else
+								{
+									naxResult.setOutputFilename(outputFile.getName());
+									naxResult.setOutputFile(null);
+								}
+							}
+
+							naxResultList.add(naxResult);
+							FileUtils.forceDelete(tempFile);
+						}
+
+						zipEntry = zipInputStream.getNextEntry();
+					}
+				}
+				finally
+				{
+					IOUtils.closeQuietly(zipOutputStream);
+				}
+			}
+			else
+			{
+				NaxResult naxResult = processSingleFile(inputStream, name, size, outputFile);
+				naxResultList.add(naxResult);
+			}
+		}
+		catch (Exception exception)
+		{
+			NaxResult naxResult = new NaxResult();
+			naxResult.setParsingSuccess(false);
+			naxResult.setParsingErrorMessage(exception.getMessage());
+			naxResult.setParsingErrorMessageDetails(ExceptionUtils.getStackTrace(exception));
+			naxResultList.add(naxResult);
+
+			exception.printStackTrace();
+		}
+
+		return naxResultList;
+	}
+
+	private NaxResult processSingleFile(InputStream inputStream,
+										String name,
+										long size,
+										File outputFile)
 	{
 		NaxResult naxResult = new NaxResult();
 
 		naxResult.setNaxConfig(getNaxConfig());
-		naxResult.setInputFileInfo(naxInfoInputStream);
 		naxResult.setOutputFile(outputFile);
 
+		InputStream xmlInputStream = null;
 		OutputStream outputStream = null;
 
 		try
 		{
-			InputStream xmlInputStream = null;
+			ProgressTrackingDigestInputStream progressTrackingDigestInputStream = new ProgressTrackingDigestInputStream(inputStream, name, size);
 
-			if (naxResult.getInputFileInfo().getName().endsWith(".gz"))
+			if (name.endsWith(".gz"))
 			{
-				xmlInputStream = new BufferedInputStream(new GZIPInputStream(naxInfoInputStream, GZIP_BUFFER), INPUT_BUFFER);
+				xmlInputStream = new BufferedInputStream(new GZIPInputStream(progressTrackingDigestInputStream, GZIP_BUFFER), INPUT_BUFFER);
 			}
 			else
 			{
-				xmlInputStream = new BufferedInputStream(naxInfoInputStream, INPUT_BUFFER);
+				xmlInputStream = new BufferedInputStream(progressTrackingDigestInputStream, INPUT_BUFFER);
 			}
+
+			naxResult.setInputFileInfo(progressTrackingDigestInputStream);
 
 			if (naxResult.getOutputFile() != null)
 			{
 				if (naxResult.getOutputFile().getName().endsWith(".gz"))
 				{
-					logger.info(String.format("Output will be compressed to: %s...", naxResult.getOutputFilename()));
-					outputStream = new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(naxResult
-																											  .getOutputFile()), GZIP_BUFFER), OUTPUT_BUFFER);
+					logger.info(String.format("Output will be compressed to: %s...", naxResult
+							.getOutputFilename()));
+					outputStream = new BufferedOutputStream(new GZIPOutputStream(
+							new FileOutputStream(naxResult.getOutputFile()), GZIP_BUFFER), OUTPUT_BUFFER);
 				}
 				else
 				{
-					logger.info(String.format("Output will be uncompressed to: %s...", naxResult.getOutputFilename()));
-					outputStream = new BufferedOutputStream(new FileOutputStream(naxResult
-																						 .getOutputFile()), OUTPUT_BUFFER);
+					logger.info(String.format("Output will be uncompressed to: %s...", naxResult
+							.getOutputFilename()));
+					outputStream = new BufferedOutputStream(
+							new FileOutputStream(naxResult.getOutputFile()), OUTPUT_BUFFER);
 				}
 
 			}
@@ -179,7 +309,8 @@ public class Nax
 			NaaccrData naaccrData = new NaaccrData();
 			boolean foundNaaccrDataElement = false;
 
-			xmlWriter.writeStartDocument(xmlStreamReader.getCharacterEncodingScheme(), xmlStreamReader.getVersion());
+			xmlWriter.writeStartDocument(xmlStreamReader.getCharacterEncodingScheme(), xmlStreamReader
+					.getVersion());
 			xmlWriter.writeCharacters("\n");
 
 			logger.info(String.format("Start reading %s...", naxResult.getInputFileInfo().getName()));
@@ -211,7 +342,7 @@ public class Nax
 
 						switch (elementName)
 						{
-							case NaaccrConstants.NAACCR_DATA_ELEMENT:
+							case NaxConstants.NAACCR_DATA_ELEMENT:
 							{
 								foundNaaccrDataElement = true;
 
@@ -221,9 +352,10 @@ public class Nax
 							}
 
 							//This catches Item elements outside of any Patient elements (children of NaaccrData)
-							case NaaccrConstants.ITEM_ELEMENT:
+							case NaxConstants.ITEM_ELEMENT:
 							{
-								Element itemElement = domConverter.buildDocument(xmlStreamReader, documentBuilder).getDocumentElement();
+								Element itemElement = domConverter.buildDocument(xmlStreamReader, documentBuilder)
+										.getDocumentElement();
 
 								if (handleStartItemElementChildOfNaaccrData(itemElement, naaccrData, naxResult))
 								{
@@ -233,9 +365,11 @@ public class Nax
 								break;
 							}
 
-							case NaaccrConstants.PATIENT_ELEMENT:
+							case NaxConstants.PATIENT_ELEMENT:
 							{
-								Element patientElement = domConverter.buildDocument(xmlStreamReader, documentBuilder).getDocumentElement();
+								Element patientElement = domConverter
+										.buildDocument(xmlStreamReader, documentBuilder)
+										.getDocumentElement();
 
 								Patient patient = new Patient();
 								patient.initialize(patientElement);
@@ -262,7 +396,7 @@ public class Nax
 												naxConfig.getUserDictionaries(),
 												naaccrData.getDefaultUserDictionary()) &&
 												includeElementAfterRunningScripts(
-														NaaccrConstants.ITEM_ELEMENT,
+														NaxConstants.ITEM_ELEMENT,
 														naaccrData,
 														patient,
 														null,
@@ -272,7 +406,7 @@ public class Nax
 														naxResult.getInputFileInfo().getName()))
 										{
 											//Keep Item
-											incrementCount(NaaccrConstants.ITEM_ELEMENT, elementCounts);
+											incrementCount(NaxConstants.ITEM_ELEMENT, elementCounts);
 											incrementCount(patientItem.getNaaccrId(), naaccrIdCounts);
 											replaceItemValue(naxConfig
 																	 .getReplacementMap(), naxConfig
@@ -291,10 +425,11 @@ public class Nax
 										}
 										else
 										{
-											incrementCount(NaaccrConstants.ITEM_ELEMENT, excludedElementCounts);
+											incrementCount(NaxConstants.ITEM_ELEMENT, excludedElementCounts);
 											incrementCount(patientItem.getNaaccrId(), excludedNaaccrIdCounts);
 
-											Node trailingWhitespaceNode = patientItem.getItemElement().getNextSibling();
+											Node trailingWhitespaceNode = patientItem.getItemElement()
+													.getNextSibling();
 
 											if (trailingWhitespaceNode.getNodeType() == Node.TEXT_NODE)
 											{
@@ -321,10 +456,10 @@ public class Nax
 									{
 										Tumor tumor = tumors[i];
 
-										if (includeElementAfterRunningScripts(NaaccrConstants.TUMOR_ELEMENT, naaccrData, patient, tumor, null, tumor
+										if (includeElementAfterRunningScripts(NaxConstants.TUMOR_ELEMENT, naaccrData, patient, tumor, null, tumor
 												.getElement(), naxConfig, naxResult.getInputFileInfo().getName()))
 										{
-											incrementCount(NaaccrConstants.TUMOR_ELEMENT, elementCounts);
+											incrementCount(NaxConstants.TUMOR_ELEMENT, elementCounts);
 
 											//Keep Tumor
 											Item[] tumorItems = tumor.getItems().values().toArray(new Item[]{});
@@ -335,17 +470,19 @@ public class Nax
 
 												if (includeItem(naxConfig
 																		.getIncludedItems(), naxResult
-																		.getNaxConfig().getExcludedItems(), tumorItem
+																		.getNaxConfig()
+																		.getExcludedItems(), tumorItem
 																		.getNaaccrId(), naaccrData
 																		.getNaaccrDictionary(),
 																naxConfig.getUserDictionaries(),
 																naaccrData.getDefaultUserDictionary()) &&
 														includeElementAfterRunningScripts(
-																NaaccrConstants.ITEM_ELEMENT, naaccrData, patient, tumor, tumorItem, tumorItem.getItemElement(),
+																NaxConstants.ITEM_ELEMENT, naaccrData, patient, tumor, tumorItem, tumorItem
+																		.getItemElement(),
 																naxConfig, naxResult.getInputFileInfo().getName()))
 												{
 													//Keep Item
-													incrementCount(NaaccrConstants.ITEM_ELEMENT, elementCounts);
+													incrementCount(NaxConstants.ITEM_ELEMENT, elementCounts);
 													incrementCount(tumorItem.getNaaccrId(), naaccrIdCounts);
 
 													replaceItemValue(naxConfig
@@ -365,7 +502,7 @@ public class Nax
 												}
 												else
 												{
-													incrementCount(NaaccrConstants.ITEM_ELEMENT, excludedElementCounts);
+													incrementCount(NaxConstants.ITEM_ELEMENT, excludedElementCounts);
 													incrementCount(tumorItem.getNaaccrId(), excludedNaaccrIdCounts);
 
 													Node trailingWhitespaceNode = tumorItem.getItemElement()
@@ -394,14 +531,14 @@ public class Nax
 										}
 										else
 										{
-											incrementCount(NaaccrConstants.TUMOR_ELEMENT, excludedElementCounts);
+											incrementCount(NaxConstants.TUMOR_ELEMENT, excludedElementCounts);
 
 											Item[] tumorItems = tumor.getItems().values().toArray(new Item[]{});
 
 											for (int j = 0; j < tumorItems.length; j++)
 											{
 												Item tumorItem = tumorItems[j];
-												incrementCount(NaaccrConstants.ITEM_ELEMENT, excludedElementCounts);
+												incrementCount(NaxConstants.ITEM_ELEMENT, excludedElementCounts);
 												incrementCount(tumorItem.getNaaccrId(), excludedNaaccrIdCounts);
 											}
 
@@ -420,34 +557,46 @@ public class Nax
 
 									if (patient.getTumors().size() == 0 && naxConfig.isRemoveEmptyPatients())
 									{
-										incrementCount(elementName, naxResult.getNaxMetrics().getExcludedElementCounts());
+										incrementCount(elementName, naxResult.getNaxMetrics()
+												.getExcludedElementCounts());
 
 										//If we remove the patient due to no Tumors, we need to exclude all of the elements and naaccrIds, not just the ones excluded above
-										incrementCounts(excludedElementCounts, naxResult.getNaxMetrics().getExcludedElementCounts());
-										incrementCounts(elementCounts, naxResult.getNaxMetrics().getExcludedElementCounts());
-										incrementCounts(excludedNaaccrIdCounts, naxResult.getNaxMetrics().getExcludedNaaccrIdCounts());
-										incrementCounts(naaccrIdCounts, naxResult.getNaxMetrics().getExcludedNaaccrIdCounts());
+										incrementCounts(excludedElementCounts, naxResult.getNaxMetrics()
+												.getExcludedElementCounts());
+										incrementCounts(elementCounts, naxResult.getNaxMetrics()
+												.getExcludedElementCounts());
+										incrementCounts(excludedNaaccrIdCounts, naxResult.getNaxMetrics()
+												.getExcludedNaaccrIdCounts());
+										incrementCounts(naaccrIdCounts, naxResult.getNaxMetrics()
+												.getExcludedNaaccrIdCounts());
 									}
 									else
 									{
 										incrementCount(elementName, naxResult.getNaxMetrics().getElementCounts());
 
-										incrementCounts(elementCounts, naxResult.getNaxMetrics().getElementCounts());
-										incrementCounts(excludedElementCounts, naxResult.getNaxMetrics().getExcludedElementCounts());
-										incrementCounts(naaccrIdCounts, naxResult.getNaxMetrics().getNaaccrIdCounts());
-										incrementCounts(excludedNaaccrIdCounts, naxResult.getNaxMetrics().getExcludedNaaccrIdCounts());
+										incrementCounts(elementCounts, naxResult.getNaxMetrics()
+												.getElementCounts());
+										incrementCounts(excludedElementCounts, naxResult.getNaxMetrics()
+												.getExcludedElementCounts());
+										incrementCounts(naaccrIdCounts, naxResult.getNaxMetrics()
+												.getNaaccrIdCounts());
+										incrementCounts(excludedNaaccrIdCounts, naxResult.getNaxMetrics()
+												.getExcludedNaaccrIdCounts());
 
 										domConverter.writeFragment(patient.getElement(), xmlWriter);
 
-										String patientCountKey = String.format("%d Tumors", patient.getTumors().size());
+										String patientCountKey = String.format("%d Tumors", patient.getTumors()
+												.size());
 
 										if (patient.getTumors().size() == 1)
 										{
 											patientCountKey = "1 Tumor";
 										}
 
-										Integer patientCount = naxResult.getNaxMetrics().getPatientCountsPerTumorCount().getOrDefault(
-												patientCountKey, Integer.valueOf(0));
+										Integer patientCount = naxResult.getNaxMetrics()
+												.getPatientCountsPerTumorCount()
+												.getOrDefault(
+														patientCountKey, Integer.valueOf(0));
 										naxResult.getNaxMetrics().getPatientCountsPerTumorCount().put(
 												patientCountKey, Integer.valueOf(patientCount.intValue() + 1));
 									}
@@ -466,7 +615,8 @@ public class Nax
 							{
 								if (foundNaaccrDataElement)
 								{
-									Document document = domConverter.buildDocument(xmlStreamReader, documentBuilder);
+									Document document = domConverter
+											.buildDocument(xmlStreamReader, documentBuilder);
 									Element extraElement = document.getDocumentElement();
 
 									if (includeOtherNamespaceElement(extraElement, naaccrData, naxResult))
@@ -492,15 +642,18 @@ public class Nax
 					}
 				}
 
-				if (naxInfoInputStream.getTotalLength() > -1)
+				if (progressTrackingDigestInputStream.getTotalLength() > -1)
 				{
-					double percentRead = Math.floor(((float) naxInfoInputStream.getTotalRead() / (float) naxInfoInputStream.getTotalLength()) * 100f);
+					double percentRead = Math.floor(((float) progressTrackingDigestInputStream
+							.getTotalRead() / (float) progressTrackingDigestInputStream.getTotalLength()) * 100f);
 
 					if ((percentRead != lastPercent) && (percentRead % 5 == 0))
 					{
 						lastPercent = (int) percentRead;
-						logger.info(String.format("Read %d%% (%d / %d bytes) of input file...", lastPercent, naxInfoInputStream
-								.getTotalRead(), naxInfoInputStream.getTotalLength()));
+						logger.info(String.format("Read %d%% (%d / %d bytes) of input file...",
+												  lastPercent,
+												  progressTrackingDigestInputStream.getTotalRead(),
+												  progressTrackingDigestInputStream.getTotalLength()));
 					}
 				}
 
@@ -516,8 +669,6 @@ public class Nax
 			naxResult.setParsingSuccess(false);
 			naxResult.setParsingErrorMessage(exception.getMessage());
 			naxResult.setParsingErrorMessageDetails(ExceptionUtils.getStackTrace(exception));
-
-			exception.printStackTrace();
 		}
 		finally
 		{
@@ -528,10 +679,49 @@ public class Nax
 
 		logger.info(String.format("Done reading %s.", naxResult.getInputFileInfo().getName()));
 
+		if (shouldCleanupOutputFiles(getNaxConfig().getDeleteOutputFiles(), naxResult))
+		{
+			outputFile.delete();
+			naxResult.setOutputFileDeleted(true);
+		}
+
 		return naxResult;
 	}
 
-	private void incrementCounts(Map<String, Integer> countsSource, Map<String, Integer> countsTarget)
+	private static boolean shouldCleanupOutputFiles(int deleteOutputFiles,
+													NaxResult naxResult)
+	{
+		boolean shouldDeleteOutput = false;
+
+		if (naxResult.getOutputFile() != null && naxResult.getOutputFile().isFile())
+		{
+			if (deleteOutputFiles == 1)
+			{
+				Integer patientCount = naxResult.getNaxMetrics().getElementCounts().get(NaxConstants.PATIENT_ELEMENT);
+
+				if (patientCount == null || patientCount.intValue() == 0)
+				{
+					logger.info(String.format("Deleting output because patient count was 0."));
+					shouldDeleteOutput = true;
+				}
+			}
+			else if (deleteOutputFiles == 2)
+			{
+				Integer tumorCount = naxResult.getNaxMetrics().getElementCounts().get(NaxConstants.TUMOR_ELEMENT);
+
+				if (tumorCount == null || tumorCount.intValue() == 0)
+				{
+					logger.info(String.format("Deleting output because tumor count was 0."));
+					shouldDeleteOutput = true;
+				}
+			}
+		}
+
+		return shouldDeleteOutput;
+	}
+
+	private void incrementCounts(Map<String, Integer> countsSource,
+								 Map<String, Integer> countsTarget)
 	{
 		for (String key : countsSource.keySet())
 		{
@@ -564,22 +754,23 @@ public class Nax
 				Script compiledScript = compiledScriptMap.get(name);
 
 				compiledScript.getBinding().setVariable("inputFilename", inputFilename);
-				compiledScript.getBinding().setVariable("elementName", NaaccrConstants.ITEM_ELEMENT);
+				compiledScript.getBinding().setVariable("elementName", NaxConstants.ITEM_ELEMENT);
 				compiledScript.getBinding().setVariable("naaccrData", naaccrData);
 				compiledScript.getBinding().setVariable("patient", patient);
 				compiledScript.getBinding().setVariable("tumor", tumor);
 				compiledScript.getBinding().setVariable("element", xmlElement);
-				compiledScript.getBinding().setVariable(NaaccrConstants.NAACCR_ID, StringUtils
+				compiledScript.getBinding().setVariable(NaxConstants.NAACCR_ID, StringUtils
 						.defaultString(naaccrId, StringUtils.EMPTY));
-				compiledScript.getBinding().setVariable(NaaccrConstants.ITEM_VALUE, StringUtils
+				compiledScript.getBinding().setVariable(NaxConstants.ITEM_VALUE, StringUtils
 						.defaultString(itemValue, StringUtils.EMPTY));
 
 				if (naaccrId != null)
 				{
-					compiledScript.getBinding().setVariable(naaccrId, StringUtils.defaultString(itemValue, StringUtils.EMPTY));
+					compiledScript.getBinding().setVariable(naaccrId, StringUtils
+							.defaultString(itemValue, StringUtils.EMPTY));
 				}
 
-				logger.finer(String.format("Run script on %s[naaccrId=%s] due to %s", NaaccrConstants.ITEM_ELEMENT, naaccrId, compiledScript
+				logger.finer(String.format("Run script on %s[naaccrId=%s] due to %s", NaxConstants.ITEM_ELEMENT, naaccrId, compiledScript
 						.getProperty("name")));
 
 				Object returnValue = compiledScript.run();
@@ -596,7 +787,9 @@ public class Nax
 		}
 	}
 
-	private void incrementCountOrOther(String key, String value, Map<String, Map<String, Integer>> valueCountsMap)
+	private void incrementCountOrOther(String key,
+									   String value,
+									   Map<String, Map<String, Integer>> valueCountsMap)
 	{
 		Map<String, Integer> valueCountsForKey = valueCountsMap.getOrDefault(key, new TreeMap<>());
 
@@ -630,7 +823,7 @@ public class Nax
 				naxConfig.getUserDictionaries(),
 				naaccrData.getDefaultUserDictionary()) &&
 				includeElementAfterRunningScripts(
-						NaaccrConstants.ITEM_ELEMENT,
+						NaxConstants.ITEM_ELEMENT,
 						naaccrData,
 						null,
 						null,
@@ -639,7 +832,7 @@ public class Nax
 						naxConfig,
 						naxResult.getInputFileInfo().getName()))
 		{
-			incrementCount(NaaccrConstants.ITEM_ELEMENT, naxResult.getNaxMetrics().getElementCounts());
+			incrementCount(NaxConstants.ITEM_ELEMENT, naxResult.getNaxMetrics().getElementCounts());
 			incrementCount(item.getNaaccrId(), naxResult.getNaxMetrics().getNaaccrIdCounts());
 
 			replaceItemValue(naxConfig
@@ -662,7 +855,7 @@ public class Nax
 		}
 		else
 		{
-			incrementCount(NaaccrConstants.ITEM_ELEMENT, naxResult.getNaxMetrics()
+			incrementCount(NaxConstants.ITEM_ELEMENT, naxResult.getNaxMetrics()
 					.getExcludedElementCounts());
 
 			incrementCount(item.getNaaccrId(), naxResult.getNaxMetrics()
@@ -679,9 +872,9 @@ public class Nax
 			XMLStreamWriter xmlWriter)
 			throws XMLStreamException, IOException, SAXException, ParserConfigurationException
 	{
-		incrementCount(NaaccrConstants.NAACCR_DATA_ELEMENT, naxResult.getNaxMetrics().getElementCounts());
+		incrementCount(NaxConstants.NAACCR_DATA_ELEMENT, naxResult.getNaxMetrics().getElementCounts());
 
-		xmlWriter.writeStartElement(NaaccrConstants.NAACCR_DATA_ELEMENT);
+		xmlWriter.writeStartElement(NaxConstants.NAACCR_DATA_ELEMENT);
 
 		for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++)
 		{
@@ -695,13 +888,15 @@ public class Nax
 		naxResult.getNaxMetrics().getNaaccrDataAttributes().putAll(naaccrData.getAttributes());
 
 		naaccrData.setNaaccrDictionary(NaaccrDictionary.createBaseDictionary(naaccrData.getNaaccrVersion()));
-		naaccrData.setDefaultUserDictionary(NaaccrDictionary.createDefaultUserDictionary(naaccrData.getNaaccrVersion()));
+		naaccrData.setDefaultUserDictionary(NaaccrDictionary
+													.createDefaultUserDictionary(naaccrData.getNaaccrVersion()));
 
 		naxResult.setNaaccrVersion(naaccrData.getNaaccrVersion());
 
 		for (int i = 0; i < xmlStreamReader.getNamespaceCount(); i++)
 		{
-			if (naxResult.getNaxConfig().isIncludeNamespaces() || StringUtils.isEmpty(xmlStreamReader.getNamespacePrefix(i)))
+			if (naxResult.getNaxConfig().isIncludeNamespaces() || StringUtils.isEmpty(xmlStreamReader
+																							  .getNamespacePrefix(i)))
 			{
 				xmlWriter.writeNamespace(xmlStreamReader.getNamespacePrefix(i), xmlStreamReader
 						.getNamespaceURI(i));
@@ -770,37 +965,6 @@ public class Nax
 		countMap.put(localName, Integer.valueOf(count.intValue() + 1));
 	}
 
-	public static Integer lookupNaaccrNum(
-			String naaccrId,
-			NaaccrDictionary baseDictionary,
-			List<NaaccrDictionary> userDictionaries,
-			NaaccrDictionary defaultUserDictionary)
-	{
-		Integer naaccrNum = baseDictionary.getNaaccrNumMap().get(naaccrId);
-
-		if (naaccrNum == null)
-		{
-			if ((userDictionaries == null) || userDictionaries.size() == 0)
-			{
-				naaccrNum = defaultUserDictionary.getNaaccrNumMap().get(naaccrId);
-			}
-			else
-			{
-				for (NaaccrDictionary userDictionary : userDictionaries)
-				{
-					naaccrNum = userDictionary.getNaaccrNumMap().get(naaccrId);
-					if (naaccrNum != null)
-					{
-						break;
-					}
-				}
-			}
-		}
-
-		return naaccrNum;
-	}
-
-
 	private boolean includeItem(
 			List<String> includedItems,
 			List<String> excludedItems,
@@ -811,7 +975,8 @@ public class Nax
 
 	{
 		boolean includeItem = true;
-		Integer naaccrNum = lookupNaaccrNum(naaccrId, baseDictionary, userDictionaries, defaultUserDictionary);
+		Integer naaccrNum = NaaccrDictionary
+				.lookupNaaccrNum(naaccrId, baseDictionary, userDictionaries, defaultUserDictionary);
 
 		if (naaccrNum == null)
 		{
@@ -820,11 +985,13 @@ public class Nax
 
 		if ((includedItems != null) && includedItems.size() > 0)
 		{
-			includeItem = (includedItems.contains(naaccrId) || ((naaccrNum != null) && includedItems.contains(naaccrNum.toString())));
+			includeItem = (includedItems.contains(naaccrId) || ((naaccrNum != null) && includedItems.contains(naaccrNum
+																													  .toString())));
 		}
 		else if ((excludedItems != null) && (excludedItems.size() > 0))
 		{
-			includeItem = (excludedItems.contains(naaccrId) == false && ((naaccrNum != null) && excludedItems.contains(naaccrNum.toString()) == false));
+			includeItem = (excludedItems.contains(naaccrId) == false && ((naaccrNum != null) && excludedItems
+					.contains(naaccrNum.toString()) == false));
 		}
 
 		return includeItem;
@@ -854,7 +1021,8 @@ public class Nax
 		if (naxResult.getNaxConfig()
 				.isIncludeNamespaces() &&
 				includeElementAfterRunningScripts(
-						elementName, naaccrData, null, null, null, element, naxResult.getNaxConfig(), naxResult.getInputFileInfo().getName()))
+						elementName, naaccrData, null, null, null, element, naxResult.getNaxConfig(), naxResult
+								.getInputFileInfo().getName()))
 		{
 			incrementOtherCount(element.getPrefix(), element.getLocalName(), naxResult.getNaxMetrics()
 					.getOtherElementCounts());
@@ -920,7 +1088,7 @@ public class Nax
 	{
 		boolean includeElement = true;
 
-		if (elementName.equals(NaaccrConstants.PATIENT_ELEMENT))
+		if (elementName.equals(NaxConstants.PATIENT_ELEMENT))
 		{
 			includeElement = includeElementAfterRunningCompiledScripts(
 					elementName,
@@ -932,7 +1100,7 @@ public class Nax
 					naxConfig.getCompiledPatientScripts(),
 					inputFilename);
 		}
-		else if (elementName.equals(NaaccrConstants.TUMOR_ELEMENT))
+		else if (elementName.equals(NaxConstants.TUMOR_ELEMENT))
 		{
 			includeElement = includeElementAfterRunningCompiledScripts(
 					elementName,
@@ -944,7 +1112,8 @@ public class Nax
 					naxConfig.getCompiledTumorScripts(),
 					inputFilename);
 		}
-		else if (elementName.equals(NaaccrConstants.ITEM_ELEMENT) && naxConfig.getCompiledItemScripts().containsKey(item.getNaaccrId()))
+		else if (elementName.equals(NaxConstants.ITEM_ELEMENT) && naxConfig.getCompiledItemScripts()
+				.containsKey(item.getNaaccrId()))
 		{
 			includeElement = includeElementAfterRunningCompiledScripts(
 					elementName,
@@ -1002,14 +1171,15 @@ public class Nax
 				compiledScript.getBinding().setVariable("tumor", tumor);
 				compiledScript.getBinding().setVariable("item", item);
 				compiledScript.getBinding().setVariable("element", xmlElement);
-				compiledScript.getBinding().setVariable(NaaccrConstants.NAACCR_ID, StringUtils
+				compiledScript.getBinding().setVariable(NaxConstants.NAACCR_ID, StringUtils
 						.defaultString(naaccrId, StringUtils.EMPTY));
-				compiledScript.getBinding().setVariable(NaaccrConstants.ITEM_VALUE, StringUtils
+				compiledScript.getBinding().setVariable(NaxConstants.ITEM_VALUE, StringUtils
 						.defaultString(itemValue, StringUtils.EMPTY));
 
 				if (naaccrId != null)
 				{
-					compiledScript.getBinding().setVariable(naaccrId, StringUtils.defaultString(itemValue, StringUtils.EMPTY));
+					compiledScript.getBinding().setVariable(naaccrId, StringUtils
+							.defaultString(itemValue, StringUtils.EMPTY));
 				}
 
 				logger.finer(String.format("Run script on %s[naaccrId=%s] due to %s", elementName, naaccrId, compiledScript

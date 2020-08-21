@@ -5,6 +5,9 @@ then
 elif [ -f ~/.bashrc ]
 then
   SHELL_SCRIPT_PROFILE=~/.bashrc
+elif [ -f ~/.bash_profile ]
+then
+  SHELL_SCRIPT_PROFILE=~/.bash_profile
 else
   SHELL_SCRIPT_PROFILE=
   echo 'ERROR: Could not find rc file for installation.'

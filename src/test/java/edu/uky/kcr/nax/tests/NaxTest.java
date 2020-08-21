@@ -21,6 +21,7 @@ import edu.uky.kcr.nax.tests.xmlns.FullName;
 import edu.uky.kcr.nax.tests.xmlns.InternalId;
 import edu.uky.kcr.nax.tests.xmlns.NaaccrFile;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +32,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 public class NaxTest
@@ -54,7 +58,9 @@ public class NaxTest
 	public static final long TEST_FILE_10_NS_SIZE = 61026;
 
 	public static final String TEST_FILE_1000_GZ_NAME = "naaccr-xml-sample-v180-abstract-1000.xml.gz";
-	public static final long TEST_FILE_1000_GZ_SIZE = 193264;
+	public static final long TEST_FILE_1000_GZ_SIZE = 183327;
+	public static final String TEST_FILE_1000_ZIP_NAME = "naaccr-xml-sample-v180-abstract-1000.xml.zip";
+	public static final long TEST_FILE_1000_ZIP_SIZE = 183388;
 	public static final long TEST_FILE_1000_GZ_PATIENT_COUNT = 944;
 	public static final long TEST_FILE_1000_GZ_TUMOR_COUNT = 1000;
 	public static final long TEST_FILE_1000_GZ_ITEM_COUNT = 82905;
@@ -66,14 +72,15 @@ public class NaxTest
 
 	public static final String SHARED_INCLUDE_EXCLUDE_ITEM = "dateOfDiagnosis";
 
-	public static final Map<String, String> TEST_CONSTANTS_MAP = Collections.unmodifiableMap(new HashMap<String, String>()
-	{
-		{
-			put("registryId", RANDOM_REGISTRYID);
-			put("nameLast", RANDOM_LAST_NAME);
-			put("dateConclusiveDx", RANDOM_DATE);
-		}
-	});
+	public static final Map<String, String> TEST_CONSTANTS_MAP = Collections
+			.unmodifiableMap(new HashMap<String, String>()
+			{
+				{
+					put("registryId", RANDOM_REGISTRYID);
+					put("nameLast", RANDOM_LAST_NAME);
+					put("dateConclusiveDx", RANDOM_DATE);
+				}
+			});
 
 	public static final List<String> EXCLUDED_ITEMS = Collections.unmodifiableList(new ArrayList<String>()
 	{
@@ -104,13 +111,24 @@ public class NaxTest
 		}
 	});
 
-	public static final List<String[]> USER_DICTIONARY_NAMES_AND_SIZES = Collections.unmodifiableList(new ArrayList<String[]>()
+	public static final List<String[]> USER_DICTIONARY_NAMES_AND_SIZES = Collections
+			.unmodifiableList(new ArrayList<String[]>()
+			{
+				{
+					add(new String[]{"naaccr-prep-dictionary-180.xml", "21355"});
+					add(new String[]{"test-user-dictionary-180.xml", "485"});
+				}
+			});
+
+	@DataProvider(name = "nonnaxmlfiles")
+	public Object[][] createNonNaxmlData()
 	{
-		{
-			add(new String[]{"naaccr-prep-dictionary-180.xml", "21355"});
-			add(new String[]{"test-user-dictionary-180.xml", "485"});
-		}
-	});
+		return new Object[][]{
+				{"NonNaaccrXmlLarge.xml.zip", 104283L},
+				{"NonNaaccrXmlSmall.xml", 469L},
+				{"NonNaaccrXmlSmall.zip", 483L}
+		};
+	}
 
 	private static NaaccrStreamConfiguration createNamespaceConfiguration()
 	{
@@ -123,28 +141,29 @@ public class NaxTest
 		configuration.registerTag("test", "FULL_NAME", edu.uky.kcr.nax.tests.xmlns.FullName.class);
 		configuration.registerTag("test", "DESCRIPTION", edu.uky.kcr.nax.tests.xmlns.Description.class);
 		configuration.registerTag("test", "NAACCR_FILE", NaaccrData.class, "NAACCR_FILE", NaaccrFile.class);
-		configuration.registerTag("test", "AUTHOR", edu.uky.kcr.nax.tests.xmlns.NaaccrFile.class, "AUTHOR", Author.class);
-		configuration.registerTag("test", "DESCRIPTION", edu.uky.kcr.nax.tests.xmlns.NaaccrFile.class, "DESCRIPTION", Description.class);
-		configuration.registerTag("test", "FULL_NAME", edu.uky.kcr.nax.tests.xmlns.Author.class, "FULL_NAME", FullName.class);
+		configuration
+				.registerTag("test", "AUTHOR", edu.uky.kcr.nax.tests.xmlns.NaaccrFile.class, "AUTHOR", Author.class);
+		configuration
+				.registerTag("test", "DESCRIPTION", edu.uky.kcr.nax.tests.xmlns.NaaccrFile.class, "DESCRIPTION", Description.class);
+		configuration
+				.registerTag("test", "FULL_NAME", edu.uky.kcr.nax.tests.xmlns.Author.class, "FULL_NAME", FullName.class);
 		configuration.registerTag("test", "PATIENT", edu.uky.kcr.nax.tests.xmlns.Patient.class);
-		configuration.registerTag("test", "CONTACT", edu.uky.kcr.nax.tests.xmlns.Patient.class, "CONTACT", Contact.class);
+		configuration
+				.registerTag("test", "CONTACT", edu.uky.kcr.nax.tests.xmlns.Patient.class, "CONTACT", Contact.class);
 		configuration.registerTag("test", "EMAIL", edu.uky.kcr.nax.tests.xmlns.Patient.class, "EMAIL", Email.class);
 		configuration.registerTag("test", "PATH_REPORT", String.class);
 		configuration.registerTag("test", "TUMOR", edu.uky.kcr.nax.tests.xmlns.Tumor.class);
 		configuration.registerImplicitCollection(edu.uky.kcr.nax.tests.xmlns.Tumor.class, "PATH_REPORT", String.class);
-		configuration.registerImplicitCollection(edu.uky.kcr.nax.tests.xmlns.DeletionList.class, "INTERNAL_ID", InternalId.class);
+		configuration
+				.registerImplicitCollection(edu.uky.kcr.nax.tests.xmlns.DeletionList.class, "INTERNAL_ID", InternalId.class);
 
 		return configuration;
 	}
 
 
-	private ProgressTrackingDigestInputStream createTestInputStream(String name,
-																	long size)
-			throws NoSuchAlgorithmException
+	private InputStream getTestResourceInputStream(String name)
 	{
-		return new ProgressTrackingDigestInputStream(this.getClass()
-															 .getResourceAsStream("/" + name),
-													 name, size);
+		return this.getClass().getResourceAsStream("/" + name);
 	}
 
 	@DataProvider(name = "alltestfiles")
@@ -153,6 +172,7 @@ public class NaxTest
 		return new Object[][]{
 				{TEST_FILE_10_USER_NAME, TEST_FILE_10_USER_SIZE, NaaccrStreamConfiguration.getDefault(), USER_DICTIONARY_NAMES_AND_SIZES},
 				{TEST_FILE_1000_GZ_NAME, TEST_FILE_1000_GZ_SIZE, NaaccrStreamConfiguration.getDefault(), Collections.EMPTY_LIST},
+				{TEST_FILE_1000_ZIP_NAME, TEST_FILE_1000_ZIP_SIZE, NaaccrStreamConfiguration.getDefault(), Collections.EMPTY_LIST},
 				{TEST_FILE_10_NS_NAME, TEST_FILE_10_NS_SIZE, createNamespaceConfiguration(), Collections.EMPTY_LIST}
 		};
 	}
@@ -164,13 +184,25 @@ public class NaxTest
 		NaxConfig naxConfig = new NaxConfig();
 		Nax nax = Nax.newInstance(naxConfig);
 
-		NaxResult naxResult = nax.process(createTestInputStream(TEST_FILE_1000_GZ_NAME, TEST_FILE_1000_GZ_SIZE));
+		try (InputStream inputStream = getTestResourceInputStream(TEST_FILE_1000_GZ_NAME))
+		{
+			List<NaxResult> naxResults = nax.process(inputStream, TEST_FILE_1000_GZ_NAME, TEST_FILE_1000_GZ_SIZE);
 
-		Assert.assertEquals(TEST_FILE_1000_GZ_PATIENT_COUNT, naxResult.getNaxMetrics().getElementCounts().get("Patient").longValue(), "Check Patient Count");
-		Assert.assertEquals(TEST_FILE_1000_GZ_TUMOR_COUNT, naxResult.getNaxMetrics().getElementCounts().get("Tumor").longValue(), "Check Tumor Count");
-		Assert.assertEquals(TEST_FILE_1000_GZ_ITEM_COUNT, naxResult.getNaxMetrics().getElementCounts().get("Item").longValue(), "Check Item Count");
-		Assert.assertEquals(1L, naxResult.getNaxMetrics().getElementCounts().get("NaaccrData").longValue(), "Check NaaccrData Count");
-		Assert.assertEquals(TEST_FILE_1000_GZ_ITEM_MD5, naxResult.getInputFileInfo().getMd5(), "Check Input File MD5");
+			Assert.assertEquals(naxResults.size(), 1);
+
+			NaxResult naxResult = naxResults.get(0);
+
+			Assert.assertEquals(TEST_FILE_1000_GZ_PATIENT_COUNT, naxResult.getNaxMetrics().getElementCounts()
+					.get("Patient").longValue(), "Check Patient Count");
+			Assert.assertEquals(TEST_FILE_1000_GZ_TUMOR_COUNT, naxResult.getNaxMetrics().getElementCounts().get("Tumor")
+					.longValue(), "Check Tumor Count");
+			Assert.assertEquals(TEST_FILE_1000_GZ_ITEM_COUNT, naxResult.getNaxMetrics().getElementCounts().get("Item")
+					.longValue(), "Check Item Count");
+			Assert.assertEquals(1L, naxResult.getNaxMetrics().getElementCounts().get("NaaccrData")
+					.longValue(), "Check NaaccrData Count");
+			Assert.assertEquals(naxResult.getInputFileInfo()
+										.getMd5(), TEST_FILE_1000_GZ_ITEM_MD5, "Check Input File MD5");
+		}
 	}
 
 	@Test
@@ -184,15 +216,18 @@ public class NaxTest
 
 		File tempFile = File.createTempFile("tempNaxTest", ".xml");
 
-		try
+		try (InputStream inputStream = getTestResourceInputStream(TEST_FILE_10_NS_NAME))
 		{
-			NaxResult naxResult = nax.process(createTestInputStream(TEST_FILE_10_NS_NAME, TEST_FILE_10_NS_SIZE), tempFile);
+			List<NaxResult> naxResults = nax.process(inputStream, TEST_FILE_10_NS_NAME, TEST_FILE_10_NS_SIZE, tempFile);
+
+			Assert.assertEquals(naxResults.size(), 1);
+
 			String allFileText = FileUtils.readFileToString(tempFile);
 			allFileText = StringUtils.substringAfter(allFileText, "?>").trim();
 
-			try (InputStream inputStream = this.getClass().getResourceAsStream("/" + TEST_FILE_10_NS_NAME))
+			try (InputStream inputStream2 = this.getClass().getResourceAsStream("/" + TEST_FILE_10_NS_NAME))
 			{
-				String fileString = IOUtils.toString(inputStream);
+				String fileString = IOUtils.toString(inputStream2);
 				fileString = StringUtils.substringAfter(fileString, "?>").trim();
 
 				fileString = StringUtils.replace(fileString, "\r\n", "\n");
@@ -206,11 +241,30 @@ public class NaxTest
 		}
 	}
 
+	@Test(dataProvider = "nonnaxmlfiles")
+	public void testNonNaaccrXmlFile(String filename,
+									 long size)
+			throws IOException
+	{
+		Nax nax = Nax.newInstance(new NaxConfig());
+
+		try (InputStream inputStream = getTestResourceInputStream(filename))
+		{
+			List<NaxResult> naxResults = nax.process(inputStream, filename, size);
+
+			Assert.assertEquals(naxResults.size(), 1);
+
+			NaxResult naxResult = naxResults.get(0);
+
+			Assert.assertFalse(naxResult.isParsingSuccess());
+		}
+	}
+
 	@Test(dataProvider = "alltestfiles")
 	public void testProcessFileWithoutChanges(String filename,
-									  long filesize,
-									  NaaccrStreamConfiguration configuration,
-									  List<String[]> userDictionaryFiles)
+											  long filesize,
+											  NaaccrStreamConfiguration configuration,
+											  List<String[]> userDictionaryFiles)
 			throws Exception
 	{
 		NaxConfig naxConfig = new NaxConfig();
@@ -220,26 +274,47 @@ public class NaxTest
 
 		Nax nax = Nax.newInstance(naxConfig);
 
-		File tempFile = File.createTempFile("tempNaxTest", ".xml");
+		File tempFile = File.createTempFile("tempNaxTest", "." + FilenameUtils.getExtension(filename));
 
-		try
+		try (InputStream inputStream = getTestResourceInputStream(filename))
 		{
-			NaxResult naxResult = nax.process(createTestInputStream(filename, filesize), tempFile);
-			String allFileText = FileUtils.readFileToString(tempFile);
+			List<NaxResult> naxResults = nax.process(inputStream, filename, filesize, tempFile);
+
+			Assert.assertEquals(naxResults.size(), 1);
+
+			String allFileText = null;
+
+			try(InputStream tempFileInputStream = createInputStream(tempFile))
+			{
+				allFileText = IOUtils.toString(tempFileInputStream);
+			}
 
 			//We dont care about differences in the XML PI
 			allFileText = StringUtils.substringAfter(allFileText, "?>").trim();
 
-			try (ProgressTrackingDigestInputStream progressTrackingDigestInputStream = createTestInputStream(filename, filesize))
+			try (InputStream inputStream2 = getTestResourceInputStream(filename))
 			{
-				InputStream inputStream = progressTrackingDigestInputStream;
+				String fileString = StringUtils.EMPTY;
 
 				if (filename.endsWith(".gz"))
 				{
-					inputStream = new GZIPInputStream(progressTrackingDigestInputStream, Nax.GZIP_BUFFER);
+					try (GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream2, Nax.GZIP_BUFFER))
+					{
+						fileString = IOUtils.toString(gzipInputStream);
+					}
 				}
-
-				String fileString = IOUtils.toString(inputStream);
+				else if (filename.endsWith(".zip"))
+				{
+					try (ZipInputStream zipInputStream = new ZipInputStream(inputStream2))
+					{
+						ZipEntry zipEntry = zipInputStream.getNextEntry();
+						fileString = IOUtils.toString(zipInputStream);
+					}
+				}
+				else
+				{
+					fileString = IOUtils.toString(inputStream2);
+				}
 
 				//We dont care about differences in the XML PI
 				fileString = StringUtils.substringAfter(fileString, "?>").trim();
@@ -247,7 +322,7 @@ public class NaxTest
 				//XML parsers will normalize all inter-element line breaks to line feeds (LF) according to the XML standard: https://www.w3.org/TR/xml/#sec-line-ends
 				fileString = StringUtils.replace(fileString, "\r\n", "\n");
 
-				Assert.assertEquals(allFileText, fileString);
+				Assert.assertEquals(allFileText, fileString, "File contents did not match");
 			}
 		}
 		finally
@@ -268,14 +343,18 @@ public class NaxTest
 
 		File tempFile = File.createTempFile("tempNaxTest", ".xml");
 
-		try
+		try (InputStream inputStream = getTestResourceInputStream(TEST_FILE_10_NS_NAME))
 		{
-			NaxResult naxResult = nax.process(createTestInputStream(TEST_FILE_10_NS_NAME, TEST_FILE_10_NS_SIZE), tempFile);
+			List<NaxResult> naxResults = nax.process(inputStream, TEST_FILE_10_NS_NAME, TEST_FILE_10_NS_SIZE, tempFile);
+
+			Assert.assertEquals(naxResults.size(), 1);
+
 			String allFileText = FileUtils.readFileToString(tempFile);
 
 			for (String ns_text : NS_STRINGS_INCLUDED)
 			{
-				Assert.assertFalse(allFileText.contains(ns_text), "Ensure output does not contain namespaced content: " + ns_text);
+				Assert.assertFalse(allFileText
+										   .contains(ns_text), "Ensure output does not contain namespaced content: " + ns_text);
 			}
 
 			Assert.assertFalse(allFileText.contains("<test:"), "Ensure output does not contain any namespaced content");
@@ -288,9 +367,9 @@ public class NaxTest
 
 	@Test(dataProvider = "alltestfiles")
 	public void testOutputFileMetrics(String filename,
-							   long filesize,
-							   NaaccrStreamConfiguration configuration,
-							   List<String[]> userDictionaryFiles)
+									  long filesize,
+									  NaaccrStreamConfiguration configuration,
+									  List<String[]> userDictionaryFiles)
 			throws Exception
 	{
 		NaxConfig naxConfig = new NaxConfig();
@@ -298,29 +377,45 @@ public class NaxTest
 
 		initializeUserDictionariesFromFiles(userDictionaryFiles, null, naxConfig);
 
-		File tempFile = File.createTempFile("tempNaxTest", ".xml");
+		File tempFile = File.createTempFile("tempNaxTest", "." + FilenameUtils.getExtension(filename));
 
-		try(ProgressTrackingDigestInputStream firstInputStream = createTestInputStream(filename, filesize))
+		try (InputStream firstInputStream = getTestResourceInputStream(filename))
 		{
-			NaxResult naxResult = Nax.newInstance(naxConfig).process(firstInputStream, tempFile);
+			List<NaxResult> naxResults = Nax.newInstance(naxConfig)
+					.process(firstInputStream, filename, filesize, tempFile);
 
-			try (ProgressTrackingDigestInputStream secondInputStream = ProgressTrackingDigestInputStream.newInstance(tempFile))
+			Assert.assertEquals(naxResults.size(), 1);
+
+			NaxResult naxResult = naxResults.get(0);
+
+			try (InputStream secondInputStream = new FileInputStream(tempFile))
 			{
-				NaxResult naxResultAfterOutput = Nax.newInstance(naxConfig).process(secondInputStream);
+				List<NaxResult> naxResultsAfterOutput = Nax.newInstance(naxConfig).process(secondInputStream, tempFile
+						.getName(), tempFile.length());
 
-				Assert.assertEquals(naxResult.getNaxMetrics().getElementCounts(), naxResultAfterOutput.getNaxMetrics().getElementCounts());
-				Assert.assertEquals(naxResult.getNaxMetrics().getOtherElementCounts(), naxResultAfterOutput.getNaxMetrics().getOtherElementCounts());
-				Assert.assertNotEquals(naxResult.getNaxMetrics().getExcludedElementCounts().get("Item"), naxResultAfterOutput.getNaxMetrics()
-						.getExcludedElementCounts().get("Item"));
-				Assert.assertEquals(naxResult.getNaxMetrics().getExcludedElementCounts().get("Tumor"), naxResultAfterOutput.getNaxMetrics()
-						.getExcludedElementCounts().get("Tumor"));
-				Assert.assertNotEquals(naxResult.getNaxMetrics().getExcludedNaaccrIdCounts(), naxResultAfterOutput.getNaxMetrics().getExcludedNaaccrIdCounts());
+				Assert.assertEquals(naxResultsAfterOutput.size(), 1);
+
+				NaxResult naxResultAfterOutput = naxResultsAfterOutput.get(0);
+
+				Assert.assertEquals(naxResult.getNaxMetrics().getElementCounts(), naxResultAfterOutput.getNaxMetrics()
+						.getElementCounts());
+				Assert.assertEquals(naxResult.getNaxMetrics().getOtherElementCounts(), naxResultAfterOutput
+						.getNaxMetrics().getOtherElementCounts());
+				Assert.assertNotEquals(naxResult.getNaxMetrics().getExcludedElementCounts()
+											   .get("Item"), naxResultAfterOutput.getNaxMetrics()
+											   .getExcludedElementCounts().get("Item"));
+				Assert.assertEquals(naxResult.getNaxMetrics().getExcludedElementCounts()
+											.get("Tumor"), naxResultAfterOutput.getNaxMetrics()
+											.getExcludedElementCounts().get("Tumor"));
+				Assert.assertNotEquals(naxResult.getNaxMetrics().getExcludedNaaccrIdCounts(), naxResultAfterOutput
+						.getNaxMetrics().getExcludedNaaccrIdCounts());
 				Assert.assertNull(naxResult.getNaxMetrics().getNaaccrIdCounts().get("patientIdNumber"));
 				Assert.assertNull(naxResultAfterOutput.getNaxMetrics().getNaaccrIdCounts().get("patientIdNumber"));
 				Assert.assertNull(naxResult.getNaxMetrics().getNaaccrIdCounts().get("primarySite"));
 				Assert.assertNull(naxResultAfterOutput.getNaxMetrics().getNaaccrIdCounts().get("primarySite"));
-				Assert.assertEquals(naxResult.getNaxMetrics().getNaaccrIdCounts().get("dateOfDiagnosis"), naxResultAfterOutput.getNaxMetrics()
-						.getNaaccrIdCounts().get("dateOfDiagnosis"));
+				Assert.assertEquals(naxResult.getNaxMetrics().getNaaccrIdCounts()
+											.get("dateOfDiagnosis"), naxResultAfterOutput.getNaxMetrics()
+											.getNaaccrIdCounts().get("dateOfDiagnosis"));
 			}
 		}
 		finally
@@ -340,14 +435,18 @@ public class NaxTest
 			{
 				if (userDictionaries != null)
 				{
-					try (InputStream userDictionaryInputStream = this.getClass().getResourceAsStream("/" + userDictionaryFileinfo[0]))
+					try (InputStream userDictionaryInputStream = this.getClass()
+							.getResourceAsStream("/" + userDictionaryFileinfo[0]))
 					{
-						userDictionaries.add(NaaccrXmlDictionaryUtils.readDictionary(new InputStreamReader(userDictionaryInputStream)));
+						userDictionaries.add(NaaccrXmlDictionaryUtils
+													 .readDictionary(new InputStreamReader(userDictionaryInputStream)));
 					}
 				}
 
-				try (ProgressTrackingDigestInputStream userDictionaryInputStream = createTestInputStream(userDictionaryFileinfo[0], Long
-						.parseLong(userDictionaryFileinfo[1])))
+				try (ProgressTrackingDigestInputStream userDictionaryInputStream = new ProgressTrackingDigestInputStream(
+						getTestResourceInputStream(userDictionaryFileinfo[0]),
+						userDictionaryFileinfo[0],
+						Long.parseLong(userDictionaryFileinfo[1])))
 				{
 					naxConfig.withUserDictionary(userDictionaryInputStream);
 				}
@@ -363,9 +462,9 @@ public class NaxTest
 								 List<String[]> userDictionaryFiles)
 			throws Exception
 	{
-		File tempFile = File.createTempFile("tempNaxTest", ".xml");
+		File tempFile = File.createTempFile("tempNaxTest", "." + FilenameUtils.getExtension(filename));
 
-		try (ProgressTrackingDigestInputStream inputStream = createTestInputStream(filename, filesize))
+		try (InputStream inputStream = getTestResourceInputStream(filename))
 		{
 			NaxConfig naxConfig = new NaxConfig();
 
@@ -377,31 +476,39 @@ public class NaxTest
 
 			Nax nax = Nax.newInstance(naxConfig);
 
-			NaxResult naxResult = nax.process(inputStream, tempFile);
+			List<NaxResult> naxResults = nax.process(inputStream, filename, filesize, tempFile);
+
+			Assert.assertEquals(naxResults.size(), 1);
+			NaxResult naxResult = naxResults.get(0);
 
 			NaaccrDictionary naaccrDictionary = NaaccrDictionary.createBaseDictionary(naxResult.getNaaccrVersion());
 
-			NaaccrDictionary defaultUserDictionary = NaaccrDictionary.createDefaultUserDictionary(naxResult.getNaaccrVersion());
+			NaaccrDictionary defaultUserDictionary = NaaccrDictionary.createDefaultUserDictionary(naxResult
+																										  .getNaaccrVersion());
 
-			try (PatientXmlReader reader = new PatientXmlReader(
-					new FileReader(tempFile),
-					NaaccrOptions.getDefault(),
-					userDictionaries,
-					configuration))
+			try (InputStream tempFileInputStream = createInputStream(tempFile);
+				 PatientXmlReader reader = new PatientXmlReader(
+						 new InputStreamReader(tempFileInputStream),
+						 NaaccrOptions.getDefault(),
+						 userDictionaries,
+						 configuration))
 			{
-				checkExcludedItems(reader.getRootData().getItems(), EXCLUDED_ITEMS, naaccrDictionary, naxConfig.getUserDictionaries(), defaultUserDictionary);
+				checkExcludedItems(reader.getRootData().getItems(), EXCLUDED_ITEMS, naaccrDictionary, naxConfig
+						.getUserDictionaries(), defaultUserDictionary);
 
 				Patient patient = reader.readPatient();
 
 				while (patient != null)
 				{
-					checkExcludedItems(patient.getItems(), EXCLUDED_ITEMS, naaccrDictionary, naxConfig.getUserDictionaries(), defaultUserDictionary);
+					checkExcludedItems(patient.getItems(), EXCLUDED_ITEMS, naaccrDictionary, naxConfig
+							.getUserDictionaries(), defaultUserDictionary);
 
 					List<Tumor> tumors = patient.getTumors();
 
 					for (Tumor tumor : tumors)
 					{
-						checkExcludedItems(tumor.getItems(), EXCLUDED_ITEMS, naaccrDictionary, naxConfig.getUserDictionaries(), defaultUserDictionary);
+						checkExcludedItems(tumor.getItems(), EXCLUDED_ITEMS, naaccrDictionary, naxConfig
+								.getUserDictionaries(), defaultUserDictionary);
 					}
 
 					patient = reader.readPatient();
@@ -422,9 +529,9 @@ public class NaxTest
 								 List<String[]> userDictionaryFiles)
 			throws Exception
 	{
-		File tempFile = File.createTempFile("tempNaxTest", ".xml");
+		File tempFile = File.createTempFile("tempNaxTest", "." + FilenameUtils.getExtension(filename));
 
-		try (ProgressTrackingDigestInputStream inputStream = createTestInputStream(filename, filesize))
+		try (InputStream inputStream = getTestResourceInputStream(filename))
 		{
 			NaxConfig naxConfig = new NaxConfig();
 
@@ -436,30 +543,38 @@ public class NaxTest
 
 			Nax nax = Nax.newInstance(naxConfig);
 
-			NaxResult naxResult = nax.process(inputStream, tempFile);
+			List<NaxResult> naxResults = nax.process(inputStream, filename, filesize, tempFile);
+
+			Assert.assertEquals(naxResults.size(), 1);
+			NaxResult naxResult = naxResults.get(0);
 
 			NaaccrDictionary naaccrDictionary = NaaccrDictionary.createBaseDictionary(naxResult.getNaaccrVersion());
-			NaaccrDictionary defaultUserDictionary = NaaccrDictionary.createDefaultUserDictionary(naxResult.getNaaccrVersion());
+			NaaccrDictionary defaultUserDictionary = NaaccrDictionary.createDefaultUserDictionary(naxResult
+																										  .getNaaccrVersion());
 
-			try (PatientXmlReader reader = new PatientXmlReader(
-					new FileReader(tempFile),
-					NaaccrOptions.getDefault(),
-					userDictionaries,
-					configuration))
+			try (InputStream tempFileInputStream = createInputStream(tempFile);
+				 PatientXmlReader reader = new PatientXmlReader(
+						 new InputStreamReader(tempFileInputStream),
+						 NaaccrOptions.getDefault(),
+						 userDictionaries,
+						 configuration))
 			{
-				checkIncludedItems(reader.getRootData().getItems(), INCLUDED_ITEMS, naaccrDictionary, naxConfig.getUserDictionaries(), defaultUserDictionary);
+				checkIncludedItems(reader.getRootData().getItems(), INCLUDED_ITEMS, naaccrDictionary, naxConfig
+						.getUserDictionaries(), defaultUserDictionary);
 
 				Patient patient = reader.readPatient();
 
 				while (patient != null)
 				{
-					checkIncludedItems(patient.getItems(), INCLUDED_ITEMS, naaccrDictionary, naxConfig.getUserDictionaries(), defaultUserDictionary);
+					checkIncludedItems(patient.getItems(), INCLUDED_ITEMS, naaccrDictionary, naxConfig
+							.getUserDictionaries(), defaultUserDictionary);
 
 					List<Tumor> tumors = patient.getTumors();
 
 					for (Tumor tumor : tumors)
 					{
-						checkIncludedItems(tumor.getItems(), INCLUDED_ITEMS, naaccrDictionary, naxConfig.getUserDictionaries(), defaultUserDictionary);
+						checkIncludedItems(tumor.getItems(), INCLUDED_ITEMS, naaccrDictionary, naxConfig
+								.getUserDictionaries(), defaultUserDictionary);
 					}
 
 					patient = reader.readPatient();
@@ -472,6 +587,30 @@ public class NaxTest
 		}
 	}
 
+	private InputStream createInputStream(File tempFile)
+			throws IOException
+	{
+		InputStream tempFileInputStream = null;
+
+		if (tempFile.getName().endsWith(".gz"))
+		{
+			tempFileInputStream = new GZIPInputStream(new FileInputStream(tempFile));
+		}
+		else if (tempFile.getName().endsWith(".zip"))
+		{
+			ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(tempFile));
+			zipInputStream.getNextEntry();
+
+			tempFileInputStream = zipInputStream;
+		}
+		else
+		{
+			tempFileInputStream = new FileInputStream(tempFile);
+		}
+
+		return tempFileInputStream;
+	}
+
 	@Test(dataProvider = "alltestfiles")
 	public void testConstantValue(String filename,
 								  long filesize,
@@ -479,9 +618,9 @@ public class NaxTest
 								  List<String[]> userDictionaryFiles)
 			throws Exception
 	{
-		File tempFile = File.createTempFile("tempNaxTest", ".xml");
+		File tempFile = File.createTempFile("tempNaxTest", "." + FilenameUtils.getExtension(filename));
 
-		try (ProgressTrackingDigestInputStream inputStream = createTestInputStream(filename, filesize))
+		try (InputStream inputStream = getTestResourceInputStream(filename))
 		{
 			NaxConfig naxConfig = new NaxConfig();
 
@@ -497,10 +636,11 @@ public class NaxTest
 
 			Nax nax = Nax.newInstance(naxConfig);
 
-			nax.process(inputStream, tempFile);
+			nax.process(inputStream, filename, filesize, tempFile);
 
-			try (PatientXmlReader reader = new PatientXmlReader(
-					new FileReader(tempFile),
+			try (InputStream tempFileInputStream = createInputStream(tempFile);
+					PatientXmlReader reader = new PatientXmlReader(
+					new InputStreamReader(tempFileInputStream),
 					NaaccrOptions.getDefault(),
 					userDictionaries,
 					configuration))
@@ -539,10 +679,13 @@ public class NaxTest
 		for (Item item : items)
 		{
 			String naaccrId = item.getNaaccrId();
-			Integer naaccrNum = Nax.lookupNaaccrNum(naaccrId, naaccrDictionary, userDictionaries, defaultUserDictionary);
+			Integer naaccrNum = NaaccrDictionary
+					.lookupNaaccrNum(naaccrId, naaccrDictionary, userDictionaries, defaultUserDictionary);
 
-			Assert.assertFalse(excludedItems.contains(naaccrId), "Ensure excluded naaccrId is not in output: " + naaccrId);
-			Assert.assertFalse(excludedItems.contains(naaccrNum.toString()), "Ensure excluded naaccrNum is not in output: " + naaccrNum);
+			Assert.assertFalse(excludedItems
+									   .contains(naaccrId), "Ensure excluded naaccrId is not in output: " + naaccrId);
+			Assert.assertFalse(excludedItems.contains(naaccrNum
+															  .toString()), "Ensure excluded naaccrNum is not in output: " + naaccrNum);
 		}
 	}
 
@@ -555,7 +698,8 @@ public class NaxTest
 		for (Item item : items)
 		{
 			String naaccrId = item.getNaaccrId();
-			Integer naaccrNum = Nax.lookupNaaccrNum(naaccrId, naaccrDictionary, userDictionaries, defaultUserDictionary);
+			Integer naaccrNum = NaaccrDictionary
+					.lookupNaaccrNum(naaccrId, naaccrDictionary, userDictionaries, defaultUserDictionary);
 
 			Assert.assertTrue(includedItems.contains(naaccrId) || includedItems.contains(naaccrNum.toString()),
 							  "Ensure included naaccrId or naaccrNum is in output: " + naaccrId);
@@ -569,11 +713,13 @@ public class NaxTest
 		{
 			if (constantValues.containsKey(item.getNaaccrId()))
 			{
-				Assert.assertEquals(item.getValue(), constantValues.get(item.getNaaccrId()), "Ensure constant equals " + item.getNaaccrId());
+				Assert.assertEquals(item.getValue(), constantValues
+						.get(item.getNaaccrId()), "Ensure constant equals " + item.getNaaccrId());
 			}
 			else
 			{
-				Assert.assertNotEquals(item.getValue(), constantValues.get(item.getNaaccrId()), "Ensure constant does not equal " + item.getNaaccrId());
+				Assert.assertNotEquals(item.getValue(), constantValues
+						.get(item.getNaaccrId()), "Ensure constant does not equal " + item.getNaaccrId());
 			}
 		}
 	}

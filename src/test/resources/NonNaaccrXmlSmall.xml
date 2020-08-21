@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<NaaccrDictionary
+		dictionaryUri="test-user-dictionary-180.xml"
+		naaccrVersion="180"
+		specificationVersion="1.4"
+		description="Test User Dictionary"
+		xmlns="http://naaccr.org/naaccrxml">
+	<ItemDefs>
+		<ItemDef naaccrId="geneTest"
+				 startColumn="1682"
+				 length="1"
+				 naaccrName="Indication of Genetic Test Availability"
+				 naaccrNum="99999"
+				 recordTypes="A,M,C,I"
+				 parentXmlElement="Tumor"/>
+	</ItemDefs>
+</NaaccrDictionary>

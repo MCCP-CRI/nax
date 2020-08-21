@@ -31,7 +31,7 @@
 
 package edu.uky.kcr.nax.model;
 
-import edu.uky.kcr.nax.NaaccrConstants;
+import edu.uky.kcr.nax.NaxConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -44,6 +44,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,6 +62,36 @@ public class NaaccrDictionary
 	protected NaaccrDictionary()
 	{
 
+	}
+
+	public static Integer lookupNaaccrNum(
+			String naaccrId,
+			NaaccrDictionary baseDictionary,
+			List<NaaccrDictionary> userDictionaries,
+			NaaccrDictionary defaultUserDictionary)
+	{
+		Integer naaccrNum = baseDictionary.getNaaccrNumMap().get(naaccrId);
+
+		if (naaccrNum == null)
+		{
+			if ((userDictionaries == null) || userDictionaries.size() == 0)
+			{
+				naaccrNum = defaultUserDictionary.getNaaccrNumMap().get(naaccrId);
+			}
+			else
+			{
+				for (NaaccrDictionary userDictionary : userDictionaries)
+				{
+					naaccrNum = userDictionary.getNaaccrNumMap().get(naaccrId);
+					if (naaccrNum != null)
+					{
+						break;
+					}
+				}
+			}
+		}
+
+		return naaccrNum;
 	}
 
 	public static NaaccrDictionary createBaseDictionary(String naaccrVersion)
@@ -102,12 +133,12 @@ public class NaaccrDictionary
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.parse(new InputSource(inputStream));
 
-		NodeList itemDefNodes = document.getElementsByTagName(NaaccrConstants.ITEM_DEF);
+		NodeList itemDefNodes = document.getElementsByTagName(NaxConstants.ITEM_DEF);
 		for (int i = 0; i < itemDefNodes.getLength(); i++)
 		{
 			Element itemDef = (Element) itemDefNodes.item(i);
-			String naaccrId = itemDef.getAttributeNode(NaaccrConstants.NAACCR_ID).getValue();
-			Integer naaccrNum = Integer.valueOf(itemDef.getAttributeNode(NaaccrConstants.NAACCR_NUM).getValue());
+			String naaccrId = itemDef.getAttributeNode(NaxConstants.NAACCR_ID).getValue();
+			Integer naaccrNum = Integer.valueOf(itemDef.getAttributeNode(NaxConstants.NAACCR_NUM).getValue());
 
 			getNaaccrNumMap().put(naaccrId, naaccrNum);
 			getNaaccrIdMap().put(naaccrNum, naaccrId);

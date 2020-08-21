@@ -31,7 +31,7 @@
 
 package edu.uky.kcr.nax.model;
 
-import edu.uky.kcr.nax.NaaccrConstants;
+import edu.uky.kcr.nax.NaxConstants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedHashMap;
@@ -65,7 +65,7 @@ public class NaaccrData
 
 	private String parseVersionString(Map<String, String> attributes)
 	{
-		return StringUtils.split(StringUtils.split(getAttributes().get(NaaccrConstants.BASE_DICTIONARY_URI), '-')[2], '.')[0];
+		return StringUtils.split(StringUtils.split(getAttributes().get(NaxConstants.BASE_DICTIONARY_URI), '-')[2], '.')[0];
 	}
 
 	public Map<String, String> getAttributes()

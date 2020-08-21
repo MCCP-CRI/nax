@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<!-- This dictionary is maintained and provided by the NAACCR organization; it should not be modified.
+     If you need to define additional data items, please create your own user-defined dictionary.
+     Visit https://www.naaccr.org/ for more information about the NAACCR XML Data Exchange Standard. -->
+
+<NaaccrDictionary dictionaryUri="http://naaccr.org/naaccrxml/user-defined-naaccr-dictionary-210.xml"
+                  naaccrVersion="210"
+                  specificationVersion="1.4"
+                  description="NAACCR 21 default user dictionary"
+                  xmlns="http://naaccr.org/naaccrxml">
+    <ItemDefs>
+        <ItemDef naaccrId="npcrSpecificField"
+                 naaccrNum="3720"
+                 naaccrName="NPCR Specific Field"
+                 length="75"
+                 recordTypes="A,M,C,I"
+                 parentXmlElement="Tumor"
+                 trim="none"/>
+        <ItemDef naaccrId="stateRequestorItems"
+                 naaccrNum="2220"
+                 naaccrName="State/Requestor Items"
+                 length="1000"
+                 recordTypes="A,M,C,I"
+                 parentXmlElement="Tumor"
+                 trim="none"/>
+    </ItemDefs>
+    <GroupedItemDefs/>
+</NaaccrDictionary>
