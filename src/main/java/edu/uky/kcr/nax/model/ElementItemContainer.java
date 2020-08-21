@@ -31,7 +31,7 @@
 
 package edu.uky.kcr.nax.model;
 
-import edu.uky.kcr.nax.NaaccrConstants;
+import edu.uky.kcr.nax.NaxConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -79,7 +79,7 @@ public abstract class ElementItemContainer
 				{
 					if (childNode.getLocalName().equals("Item"))
 					{
-						String naaccrId = childNode.getAttributes().getNamedItem(NaaccrConstants.NAACCR_ID).getNodeValue();
+						String naaccrId = childNode.getAttributes().getNamedItem(NaxConstants.NAACCR_ID).getNodeValue();
 
 						getItems().put(naaccrId, new Item((Element) childNode));
 					}

@@ -39,7 +39,6 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -49,10 +48,8 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -117,6 +114,11 @@ public class NaxConfig
 	@JsonIgnore
 	private List<String> valueCountsSimple = null;
 
+	@JsonIgnore
+	private int metricsLogging = 1;
+
+	private int deleteOutputFiles = 0;
+
 	//This is the one that gets printed out in the result
 	private List<String> valueCounts = null;
 
@@ -176,9 +178,15 @@ public class NaxConfig
 		return this;
 	}
 
-	public NaxConfig withEmailUsernameAndPassword(String emailUsername, String emailPassword)
+	public NaxConfig withEmailUsername(String emailUsername)
 	{
 		setEmailUsername(emailUsername);
+
+		return this;
+	}
+
+	public NaxConfig withEmailPassword(String emailPassword)
+	{
 		setEmailPassword(emailPassword);
 
 		return this;
@@ -405,6 +413,41 @@ public class NaxConfig
 		return this;
 	}
 
+	public NaxConfig withMetricsLogging(int metricsLogging)
+	{
+		setMetricsLogging(metricsLogging);
+
+		return this;
+	}
+
+	public int getMetricsLogging()
+	{
+		return metricsLogging;
+	}
+
+	private void setMetricsLogging(int metricsLogging)
+	{
+		this.metricsLogging = metricsLogging;
+	}
+
+	public NaxConfig withDeleteOutputFiles(int deleteOutputFiles)
+	{
+		setDeleteOutputFiles(deleteOutputFiles);
+		return this;
+	}
+
+	public int getDeleteOutputFiles()
+	{
+		return deleteOutputFiles;
+	}
+
+	private void setDeleteOutputFiles(int deleteOutputFiles)
+	{
+		this.deleteOutputFiles = deleteOutputFiles;
+	}
+
+
+
 	protected static Map<String, Map<String, String>> loadReplacementMap(File replacementValuesFile)
 			throws IOException
 	{
@@ -416,9 +459,9 @@ public class NaxConfig
 
 			for (CSVRecord record : records)
 			{
-				String naaccrId = record.get(NaaccrConstants.NAACCR_ID);
-				String itemValue = record.get(NaaccrConstants.ITEM_VALUE);
-				String newItemValue = record.get(NaaccrConstants.NEW_ITEM_VALUE);
+				String naaccrId = record.get(NaxConstants.NAACCR_ID);
+				String itemValue = record.get(NaxConstants.ITEM_VALUE);
+				String newItemValue = record.get(NaxConstants.NEW_ITEM_VALUE);
 
 				Map<String, String> valueMap = returnValue.getOrDefault(naaccrId, new HashMap<>());
 				valueMap.put(itemValue, newItemValue);

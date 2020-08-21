@@ -31,8 +31,9 @@
 
 package edu.uky.kcr.nax;
 
-public class NaaccrConstants
+public class NaxConstants
 {
+	//NAACCR XML Constants
 	public static final String NAACCR_ID = "naaccrId";
 	public static final String BASE_DICTIONARY_URI = "baseDictionaryUri";
 	public static final String ITEM_DEF = "ItemDef";
@@ -43,4 +44,35 @@ public class NaaccrConstants
 	public static final String ITEM_ELEMENT = "Item";
 	public static final String TUMOR_ELEMENT = "Tumor";
 	public static final String NAACCR_DATA_ELEMENT = "NaaccrData";
+
+	//Command Line Option Constants
+	public static final String OPT_FILTERPATIENT = "fp";
+	public static final String OPT_FILTERTUMOR = "ft";
+	public static final String OPT_FILTERITEM = "fi";
+	public static final String OPT_SCRIPT = "s";
+	public static final String OPT_OUTPUTFILE = "o";
+	public static final String OPT_NAMESPACES = "ns";
+	public static final String OPT_EXCLUDEITEMS = "e";
+	public static final String OPT_INCLUDEITEMS = "i";
+	public static final String OPT_TIMESTAMP = "ts";
+	public static final String OPT_FILEPREFIX = "pre";
+	public static final String OPT_REPLACE = "rpl";
+	public static final String OPT_CONSTANT = "con";
+	public static final String OPT_METRICS = "met";
+	public static final String OPT_USERDICTIONARY = "usr";
+	public static final String OPT_DELETEOUTPUTFILES = "del";
+	public static final String OPT_REMOVEEMPTYPATIENTS = "rep";
+	public static final String OPT_VALUECOUNTS = "vc";
+	public static final String OPT_EMAILSUBJECT = "emsub";
+	public static final String OPT_EMAILFROM = "emfrom";
+	public static final String OPT_EMAILTO = "emto";
+	public static final String OPT_EMAILSMTPHOST = "emhost";
+	public static final String OPT_EMAILSMTPPORT = "emport";
+	public static final String OPT_EMAILCHECKSERVER = "emchk";
+	public static final String OPT_EMAILSSLSMTPPORT = "emsslport";
+	public static final String OPT_EMAILSSLONCONNECT = "emssl";
+	public static final String OPT_EMAILTLSENABLED = "emtls";
+	public static final String OPT_EMAILTLSREQUIRED = "emtlsreq";
+	public static final String OPT_EMAILUSERNAME = "emuser";
+	public static final String OPT_EMAILPASSWORD = "empass";
 }

@@ -52,12 +52,24 @@ public class NaxResult
 	private NaxFileInfo inputFileInfo = null;
 
 	private boolean parsingSuccess = false;
+	private boolean outputFileDeleted = false;
 	private String parsingErrorMessage = null;
 	private String parsingErrorMessageDetails = null;
+	private String outputFilename = null;
 
 	public NaxResult()
 	{
 
+	}
+
+	public boolean isOutputFileDeleted()
+	{
+		return outputFileDeleted;
+	}
+
+	public void setOutputFileDeleted(boolean outputFileDeleted)
+	{
+		this.outputFileDeleted = outputFileDeleted;
 	}
 
 	public void setNaxMetrics(NaxMetrics naxMetrics)
@@ -103,14 +115,17 @@ public class NaxResult
 
 	public String getOutputFilename()
 	{
-		String outputFilename = StringUtils.EMPTY;
-
-		if (getOutputFile() != null)
+		if (this.outputFilename == null && getOutputFile() != null)
 		{
-			outputFilename = getOutputFile().getAbsolutePath();
+			this.outputFilename = getOutputFile().getAbsolutePath();
 		}
 
-		return outputFilename;
+		return this.outputFilename;
+	}
+
+	public void setOutputFilename(String outputFilename)
+	{
+		this.outputFilename = outputFilename;
 	}
 
 	public File getOutputFile()
