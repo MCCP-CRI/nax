@@ -88,7 +88,7 @@ import java.util.zip.ZipOutputStream;
 public class Nax
 {
 	private static final Logger logger = Logger.getLogger(Nax.class.getName());
-	public static final int MAX_VALUE_COUNT = 256;
+	public static final int MAX_VALUE_COUNT = 5001;
 	private NaxConfig naxConfig = null;
 
 	public static final int GZIP_BUFFER = 64 * 1024;
