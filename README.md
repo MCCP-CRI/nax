@@ -115,6 +115,8 @@ Returns:
             "2019" : 4
           },
     ...
+Note: If the number of data bins exceeds 5000, the first 5000 will show their value counts and the rest of the values will be put into a group called "Other" 
+
 ## Changing data in a NAACCR XML File
 NOTE: The nax software will never make changes to an existing XML file, instead, it can create a new output file by using the command-line argument ```-o``` or ```--outputfile```. 
 If you want to do a dry run of some commands without creating an output file, omit the output file argument.

@@ -6,7 +6,7 @@
 
 	<groupId>edu.uky.kcr</groupId>
 	<artifactId>naaccrxml-commandline</artifactId>
-	<version>1.12</version>
+	<version>1.13</version>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
